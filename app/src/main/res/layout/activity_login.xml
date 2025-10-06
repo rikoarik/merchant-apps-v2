@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".presentation.ui.auth.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Logo Section -->
+        <LinearLayout
+            android:id="@+id/ll_image_view_logo_closepay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image_view_logo_closepay"
+                android:layout_width="@dimen/login_logo_width"
+                android:layout_height="@dimen/login_logo_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/login_logo_margin_top"
+                android:src="@drawable/img_merchant"
+                android:contentDescription="@string/app_name"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <!-- Input Section -->
+        <LinearLayout
+            android:id="@+id/ll_input_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/small_margin_12"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Login Title -->
+                <TextView
+                    android:id="@+id/tvLoginTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/login_input_margin_horizontal"
+                    android:layout_marginBottom="@dimen/login_section_spacing"
+                    android:text="@string/action_login"
+                    android:textColor="@color/login_title_color"
+                    android:textSize="@dimen/login_title_size"
+                    android:fontFamily="@font/poppins_semibold" />
+
+                <!-- Username Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/login_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/login_input_margin_horizontal"
+                    android:layout_marginBottom="@dimen/login_section_spacing"
+                    app:boxStrokeWidth="@dimen/input_stroke_width"
+                    app:hintAnimationEnabled="true"
+                    app:hintTextColor="@color/black"
+                    app:boxStrokeWidthFocused="@dimen/input_stroke_width_focused"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxStrokeColor="@color/input_stroke_color"
+                    app:hintEnabled="true"
+                    android:hint="@string/label_username">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:padding="@dimen/login_input_padding"
+                        android:textColor="@color/login_input_text_color"
+                        android:textSize="@dimen/login_input_size"
+                        android:fontFamily="@font/poppins"
+                        android:textCursorDrawable="@drawable/cursor_green" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/login_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/login_input_margin_horizontal"
+                    app:boxStrokeWidth="@dimen/input_stroke_width"
+                    app:boxStrokeWidthFocused="@dimen/input_stroke_width_focused"
+                    app:hintTextColor="@color/black"
+                    app:boxCornerRadiusTopStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxStrokeColor="@color/input_stroke_color"
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="@color/colorPrimaryGreen"
+                    app:hintEnabled="true"
+                    android:hint="@string/label_password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/login_input_text_color"
+                        android:inputType="textPassword|textNoSuggestions"
+                        android:maxLines="1"
+                        android:padding="@dimen/login_input_padding"
+                        android:textSize="@dimen/login_input_size"
+                        android:fontFamily="@font/poppins"
+                        android:textCursorDrawable="@drawable/cursor_green" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Forgot Password -->
+                <TextView
+                    android:id="@+id/btn_forgot_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="@dimen/login_input_margin_vertical"
+                    android:layout_marginEnd="@dimen/login_input_margin_horizontal"
+                    android:layout_marginBottom="@dimen/login_section_spacing"
+                    android:text="@string/action_forgot_password"
+                    android:textColor="@color/login_label_color"
+                    android:textSize="@dimen/login_helper_size"
+                    android:fontFamily="@font/poppins" />
+
+                <!-- Login Button Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/login_section_spacing"
+                    android:orientation="vertical">
+
+                    <com.solusinegeri.merchant3.presentation.component.button.SmartButton
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/login_button_height"
+                        android:layout_marginStart="@dimen/login_button_margin_horizontal"
+                        android:layout_marginEnd="@dimen/login_button_margin_horizontal"
+                        android:layout_marginBottom="@dimen/login_input_margin_vertical"
+                        android:text="@string/action_login"
+                        android:textSize="@dimen/login_button_size"
+                        android:fontFamily="@font/poppins_semibold"
+                        app:cornerRadius="@dimen/login_button_corner_radius" />
+
+                    <!-- Help Text -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/login_help_text"
+                        android:textAlignment="center"
+                        android:textColor="@color/login_label_color"
+                        android:textSize="@dimen/login_helper_size"
+                        android:fontFamily="@font/poppins" />
+
+                    <TextView
+                        android:id="@+id/btn_help_desk"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:autoLink="none"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:text="@string/login_help_service"
+                        android:textAlignment="center"
+                        android:textColor="@color/login_title_color"
+                        android:textSize="@dimen/login_helper_size"
+                        android:fontFamily="@font/poppins_bold" />
+
+                </LinearLayout>
+
+                <!-- Back to Initial Selection -->
+                <LinearLayout
+                    android:id="@+id/btn_go_intial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="@dimen/login_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/login_input_margin_horizontal"
+                    android:layout_marginBottom="@dimen/login_bottom_spacing"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_pilih_instansi"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/login_label_size"
+                        android:fontFamily="@font/poppins_medium" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/small_margin_5"
+                        android:src="@drawable/ic_next_new" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Version Info -->
+            <TextView
+                android:id="@+id/tv_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/login_input_margin_vertical"
+                android:text="@string/version"
+                android:textAlignment="center"
+                        android:textColor="@color/text_hint"
+                android:textSize="@dimen/login_version_size"
+                android:fontFamily="@font/poppins" />
+
+            <!-- Powered By Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/login_section_spacing"
+                android:layout_marginBottom="@dimen/login_bottom_spacing"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/label_powered_by"
+                    android:textSize="@dimen/login_helper_size"
+                        android:textColor="@color/text_hint"
+                    android:fontFamily="@font/poppins" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/login_powered_logo_width"
+                        android:layout_height="@dimen/login_powered_logo_height"
+                        android:layout_marginEnd="@dimen/small_margin_10"
+                        android:src="@drawable/ic_closepay_logo"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

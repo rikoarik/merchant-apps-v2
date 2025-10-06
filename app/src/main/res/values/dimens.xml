@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Small margins -->
+    <dimen name="small_margin_4">4dp</dimen>
+    <dimen name="small_margin_5">5dp</dimen>
+    <dimen name="small_margin_8">8dp</dimen>
+    <dimen name="small_margin_10">10dp</dimen>
+    <dimen name="small_margin_12">12dp</dimen>
+    <dimen name="small_margin_16">16dp</dimen>
+
+    <!-- Medium margins -->
+    <dimen name="medium_margin_20">20dp</dimen>
+    <dimen name="medium_margin_twenty_four">24dp</dimen>
+    <dimen name="medium_margin_32">32dp</dimen>
+
+    <!-- Large margins -->
+    <dimen name="large_margin_40">40dp</dimen>
+    <dimen name="large_margin_48">48dp</dimen>
+    <dimen name="large_margin_56">56dp</dimen>
+
+    <!-- Extra large margins -->
+    <dimen name="extra_large_margin_64">64dp</dimen>
+    <dimen name="extra_large_margin_80">80dp</dimen>
+    <dimen name="extra_large_margin_100">100dp</dimen>
+
+    <!-- SDP (Scalable DP) -->
+    <dimen name="_2sdp">2dp</dimen>
+    <dimen name="_4sdp">4dp</dimen>
+    <dimen name="_6sdp">6dp</dimen>
+    <dimen name="_8sdp">8dp</dimen>
+    <dimen name="_10sdp">10dp</dimen>
+    <dimen name="_12sdp">12dp</dimen>
+    <dimen name="_14sdp">14dp</dimen>
+    <dimen name="_16sdp">16dp</dimen>
+    <dimen name="_18sdp">18dp</dimen>
+    <dimen name="_20sdp">20dp</dimen>
+    <dimen name="_22sdp">22dp</dimen>
+    <dimen name="_24sdp">24dp</dimen>
+    <dimen name="_26sdp">26dp</dimen>
+    <dimen name="_28sdp">28dp</dimen>
+    <dimen name="_30sdp">30dp</dimen>
+    <dimen name="_32sdp">32dp</dimen>
+    <dimen name="_34sdp">34dp</dimen>
+    <dimen name="_36sdp">36dp</dimen>
+    <dimen name="_38sdp">38dp</dimen>
+    <dimen name="_40sdp">40dp</dimen>
+    <dimen name="_42sdp">42dp</dimen>
+    <dimen name="_44sdp">44dp</dimen>
+    <dimen name="_46sdp">46dp</dimen>
+    <dimen name="_48sdp">48dp</dimen>
+    <dimen name="_50sdp">50dp</dimen>
+    <dimen name="_52sdp">52dp</dimen>
+    <dimen name="_54sdp">54dp</dimen>
+    <dimen name="_56sdp">56dp</dimen>
+    <dimen name="_58sdp">58dp</dimen>
+    <dimen name="_60sdp">60dp</dimen>
+    <dimen name="_62sdp">62dp</dimen>
+    <dimen name="_64sdp">64dp</dimen>
+    <dimen name="_66sdp">66dp</dimen>
+    <dimen name="_68sdp">68dp</dimen>
+    <dimen name="_70sdp">70dp</dimen>
+    <dimen name="_72sdp">72dp</dimen>
+    <dimen name="_74sdp">74dp</dimen>
+    <dimen name="_76sdp">76dp</dimen>
+    <dimen name="_78sdp">78dp</dimen>
+    <dimen name="_80sdp">80dp</dimen>
+    <dimen name="_82sdp">82dp</dimen>
+    <dimen name="_84sdp">84dp</dimen>
+    <dimen name="_86sdp">86dp</dimen>
+    <dimen name="_88sdp">88dp</dimen>
+    <dimen name="_90sdp">90dp</dimen>
+    <dimen name="_92sdp">92dp</dimen>
+    <dimen name="_94sdp">94dp</dimen>
+    <dimen name="_96sdp">96dp</dimen>
+    <dimen name="_98sdp">98dp</dimen>
+    <dimen name="_100sdp">100dp</dimen>
+    <dimen name="_120sdp">120dp</dimen>
+    <dimen name="_200sdp">200dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_xlarge">18sp</dimen>
+    <dimen name="text_size_xxlarge">20sp</dimen>
+    <dimen name="text_size_title">24sp</dimen>
+
+    <!-- Login specific text sizes -->
+    <dimen name="login_title_size">22sp</dimen>
+    <dimen name="login_label_size">14sp</dimen>
+    <dimen name="login_input_size">14sp</dimen>
+    <dimen name="login_button_size">14sp</dimen>
+    <dimen name="login_helper_size">12sp</dimen>
+    <dimen name="login_version_size">10sp</dimen>
+
+    <!-- Button heights -->
+    <dimen name="button_height_small">36dp</dimen>
+    <dimen name="button_height_medium">50dp</dimen>
+    <dimen name="button_height_large">52dp</dimen>
+
+    <!-- Button appearance -->
+    <dimen name="button_corner_radius">12dp</dimen>
+    <dimen name="button_text_size_min">12sp</dimen>
+    <dimen name="button_elevation">2dp</dimen>
+
+    <!-- Input field heights -->
+    <dimen name="input_height_small">40dp</dimen>
+    <dimen name="input_height_medium">50dp</dimen>
+    <dimen name="input_height_large">52dp</dimen>
+
+    <!-- Input field stroke widths -->
+    <dimen name="input_stroke_width">1dp</dimen>
+    <dimen name="input_stroke_width_focused">1dp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_xlarge">48dp</dimen>
+
+    <!-- Logo sizes -->
+    <dimen name="logo_width_small">120dp</dimen>
+    <dimen name="logo_height_small">40dp</dimen>
+    <dimen name="logo_width_medium">200dp</dimen>
+    <dimen name="logo_height_medium">60dp</dimen>
+    <dimen name="logo_width_large">265dp</dimen>
+    <dimen name="logo_height_large">75dp</dimen>
+
+    <!-- Card dimensions -->
+    <dimen name="card_corner_radius">15dp</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+
+    <!-- Splash screen dimensions -->
+    <dimen name="splash_logo_size">120dp</dimen>
+    <dimen name="splash_animation_size">200dp</dimen>
+
+    <!-- Bottom spacing -->
+    <dimen name="bottom_spacing_small">50dp</dimen>
+    <dimen name="bottom_spacing_medium">80dp</dimen>
+    <dimen name="bottom_spacing_large">100dp</dimen>
+
+    <!-- Additional dimensions for login layout -->
+    <dimen name="little_small_margin">8dp</dimen>
+
+    <!-- Login specific spacing -->
+    <dimen name="login_logo_margin_top">60dp</dimen>
+    <dimen name="login_logo_height">180dp</dimen>
+    <dimen name="login_logo_width">200dp</dimen>
+    <dimen name="login_input_margin_horizontal">16dp</dimen>
+    <dimen name="login_input_margin_vertical">8dp</dimen>
+    <dimen name="login_input_height">48dp</dimen>
+    <dimen name="login_input_padding">16dp</dimen>
+    <dimen name="login_button_margin_horizontal">16dp</dimen>
+    <dimen name="login_button_height">50dp</dimen>
+    <dimen name="login_section_spacing">24dp</dimen>
+    <dimen name="login_bottom_spacing">32dp</dimen>
+
+    <!-- Login powered by logo dimensions -->
+    <dimen name="login_powered_logo_width">97dp</dimen>
+    <dimen name="login_powered_logo_height">57dp</dimen>
+
+    <!-- Login button corner radius -->
+    <dimen name="login_button_corner_radius">8dp</dimen>
+
+    <!-- BottomAppBar corner radius -->
+    <dimen name="bottom_app_bar_corner_radius">24dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+</resources>

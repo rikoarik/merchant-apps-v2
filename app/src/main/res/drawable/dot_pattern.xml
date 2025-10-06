@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+        </shape>
+    </item>
+    
+    <!-- Dot pattern -->
+    <item android:top="10dp" android:left="10dp">
+        <shape android:shape="oval">
+            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+    
+    <item android:top="10dp" android:left="30dp">
+        <shape android:shape="oval">
+            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+    
+    <item android:top="30dp" android:left="10dp">
+        <shape android:shape="oval">
+            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+    
+    <item android:top="30dp" android:left="30dp">
+        <shape android:shape="oval">
+            <size android:width="8dp" android:height="8dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+    
+    <!-- Larger dots -->
+    <item android:top="50dp" android:left="20dp">
+        <shape android:shape="oval">
+            <size android:width="12dp" android:height="12dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+    
+    <item android:top="70dp" android:left="40dp">
+        <shape android:shape="oval">
+            <size android:width="12dp" android:height="12dp" />
+            <solid android:color="@color/text_secondary" />
+        </shape>
+    </item>
+</layer-list>

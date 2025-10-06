@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tablet dimensions - scaled up for larger screens -->
+    
+    <!-- Small margins -->
+    <dimen name="small_margin_4">6dp</dimen>
+    <dimen name="small_margin_8">12dp</dimen>
+    <dimen name="small_margin_12">18dp</dimen>
+    <dimen name="small_margin_16">24dp</dimen>
+    
+    <!-- Medium margins -->
+    <dimen name="medium_margin_20">30dp</dimen>
+    <dimen name="medium_margin_twenty_four">36dp</dimen>
+    <dimen name="medium_margin_32">48dp</dimen>
+
+    <!-- Icon sizes -->
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">26dp</dimen>
+    <dimen name="icon_size_xlarge">28dp</dimen>
+
+    <!-- Card dimensions -->
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_elevation">3dp</dimen>
+    <dimen name="card_padding">16dp</dimen>
+    
+    <!-- Large margins -->
+    <dimen name="large_margin_40">60dp</dimen>
+    <dimen name="large_margin_48">72dp</dimen>
+    <dimen name="large_margin_56">84dp</dimen>
+    
+    <!-- Extra large margins -->
+    <dimen name="extra_large_margin_64">96dp</dimen>
+    <dimen name="extra_large_margin_80">120dp</dimen>
+    <dimen name="extra_large_margin_100">150dp</dimen>
+    
+    <!-- Text sizes -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_xlarge">20sp</dimen>
+    <dimen name="text_size_xxlarge">22sp</dimen>
+    <dimen name="text_size_title">26sp</dimen>
+    
+    <!-- Button heights -->
+    <dimen name="button_height_small">42dp</dimen>
+    <dimen name="button_height_medium">50dp</dimen>
+    <dimen name="button_height_large">58dp</dimen>
+    
+    <!-- Button appearance - larger for tablet -->
+    <dimen name="button_corner_radius">12dp</dimen>
+    <dimen name="button_text_size_min">14sp</dimen>
+    <dimen name="button_elevation">3dp</dimen>
+    
+    <!-- Input field heights -->
+    <dimen name="input_height_small">46dp</dimen>
+    <dimen name="input_height_medium">50dp</dimen>
+    <dimen name="input_height_large">54dp</dimen>
+    
+    <!-- Logo sizes -->
+    <dimen name="logo_width_small">180dp</dimen>
+    <dimen name="logo_height_small">60dp</dimen>
+    <dimen name="logo_width_medium">300dp</dimen>
+    <dimen name="logo_height_medium">90dp</dimen>
+    <dimen name="logo_width_large">400dp</dimen>
+    <dimen name="logo_height_large">112dp</dimen>
+    
+    <!-- Splash screen dimensions -->
+    <dimen name="splash_logo_size">180dp</dimen>
+    <dimen name="splash_animation_size">300dp</dimen>
+    
+    <!-- Bottom spacing -->
+    <dimen name="bottom_spacing_small">75dp</dimen>
+    <dimen name="bottom_spacing_medium">120dp</dimen>
+    <dimen name="bottom_spacing_large">150dp</dimen>
+</resources>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Primary Colors -->
+    <color name="primary_color">#01CD97</color>
+    <color name="primary_dark">#00A075</color>
+    <color name="primary_light">#FFBBDEFB</color>
+    
+    <!-- Green Primary Colors -->
+    <color name="colorPrimaryGreen">#01CD97</color>
+    <color name="colorPrimaryGreenDark">#00A075</color>
+    <color name="colorPrimaryGreenLight">#FFC8E6C9</color>
+    
+    <!-- Accent Colors -->
+    <color name="accent_color">#FFFF9800</color>
+    <color name="accent_dark">#FFF57C00</color>
+    
+    <!-- Background Colors -->
+    <color name="background_light">#FFF5F5F5</color>
+    <color name="background_dark">#FF303030</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#FF212121</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="text_hint">#FFBDBDBD</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#01CD97</color>
+    <color name="warning">#FFFF9800</color>
+    <color name="error">#FFF44336</color>
+    <color name="info">#FF2196F3</color>
+    
+    <!-- Login specific colors -->
+    <color name="login_title_color">@color/colorPrimaryGreen</color>
+    <color name="login_label_color">@color/text_hint</color>
+    <color name="login_input_text_color">@color/text_primary</color>
+    <color name="login_input_hint_color">@color/text_hint</color>
+    <color name="login_link_color">@color/colorPrimaryGreen</color>
+    
+    <!-- Input field colors -->
+    <color name="input_stroke_color">@color/text_hint</color>
+    
+    <!-- Bottom Navigation Colors -->
+    <color name="bottom_nav_selected">@color/colorPrimaryGreen</color>
+    <color name="bottom_nav_unselected">@color/text_secondary</color>
+    <color name="gray_200">@color/text_hint</color>
+    <color name="gray_600">@color/text_secondary</color>
+    
+    <!-- Bottom Navigation Item Color State List -->
+    <color name="bottom_nav_item_color">@color/bottom_nav_item_color_selector</color>
+    
+    <!-- Dynamic Color References -->
+    <color name="primary_dynamic">@color/colorPrimaryGreen</color>
+    <color name="secondary_dynamic">@color/text_secondary</color>
+    <color name="hint_dynamic">@color/text_hint</color>
+    <color name="background_dynamic">@color/white</color>
+    
+    <!-- Additional Dynamic Colors -->
+    <color name="surface_dynamic">@color/white</color>
+    <color name="on_surface_dynamic">@color/text_primary</color>
+    <color name="on_primary_dynamic">@color/white</color>
+    
+    <!-- Status Colors Dynamic -->
+    <color name="success_dynamic">@color/success</color>
+    <color name="warning_dynamic">@color/warning</color>
+    <color name="error_dynamic">@color/error</color>
+    <color name="info_dynamic">@color/info</color>
+    
+    <!-- Login Colors Dynamic -->
+    <color name="login_title_dynamic">@color/login_title_color</color>
+    <color name="login_label_dynamic">@color/login_label_color</color>
+    <color name="login_input_text_dynamic">@color/login_input_text_color</color>
+    <color name="login_input_hint_dynamic">@color/login_input_hint_color</color>
+    <color name="login_link_dynamic">@color/login_link_color</color>
+    
+    <!-- Input Colors Dynamic -->
+    <color name="input_stroke_dynamic">@color/input_stroke_color</color>
+    
+    <!-- Bottom Navigation Dynamic -->
+    <color name="bottom_nav_selected_dynamic">@color/bottom_nav_selected</color>
+    <color name="bottom_nav_unselected_dynamic">@color/bottom_nav_unselected</color>
+    <color name="bottom_nav_item_dynamic">@color/bottom_nav_item_color</color>
+    
+    <!-- Gray Colors Dynamic -->
+    <color name="gray_200_dynamic">@color/gray_200</color>
+    <color name="gray_600_dynamic">@color/gray_600</color>
+    
+    <!-- Primary Colors Dynamic -->
+    <color name="primary_color_dynamic">@color/primary_color</color>
+    <color name="primary_dark_dynamic">@color/primary_dark</color>
+    <color name="primary_light_dynamic">@color/primary_light</color>
+    
+    <!-- Green Primary Colors Dynamic -->
+    <color name="colorPrimaryGreen_dynamic">@color/colorPrimaryGreen</color>
+    <color name="colorPrimaryGreenDark_dynamic">@color/colorPrimaryGreenDark</color>
+    <color name="colorPrimaryGreenLight_dynamic">@color/colorPrimaryGreenLight</color>
+    
+    <!-- Accent Colors Dynamic -->
+    <color name="accent_color_dynamic">@color/accent_color</color>
+    <color name="accent_dark_dynamic">@color/accent_dark</color>
+    
+    <!-- Background Colors Dynamic -->
+    <color name="background_light_dynamic">@color/background_light</color>
+    <color name="background_dark_dynamic">@color/background_dark</color>
+    
+    <!-- Text Colors Dynamic -->
+    <color name="text_primary_dynamic">@color/text_primary</color>
+    <color name="text_secondary_dynamic">@color/text_secondary</color>
+    <color name="text_hint_dynamic">@color/text_hint</color>
+    
+    <!-- Basic Colors Dynamic -->
+    <color name="black_dynamic">@color/black</color>
+    <color name="white_dynamic">@color/white</color>
+    
+    <!-- Missing Colors for Drawables -->
+    <color name="green_new">#01CD97</color>
+    <color name="color_button_yellow">#FFFF9800</color>
+    <color name="color_bg_white">#FFFFFFFF</color>
+    <color name="color_button">#01CD97</color>
+    <color name="color_orange">#FFFF9800</color>
+    <color name="color_green_merchant">#01CD97</color>
+    <color name="color_button_blue_request">#FF2196F3</color>
+    <color name="color_Reds">#FFF44336</color>
+    <color name="color_orange_very_little_light">#FFFFF3E0</color>
+    
+    <!-- Additional Missing Colors -->
+    <color name="color_green">#01CD97</color>
+    <color name="color_background_light_red">#FFFFEBEE</color>
+    <color name="color_pin">#FF9C27B0</color>
+    <color name="color_green_bright">#FF4CAF50</color>
+    <color name="color_dark_gray">#FF424242</color>
+    <color name="color_gray_light">#FFF5F5F5</color>
+    <color name="color_bg_gray_two">#FFE0E0E0</color>
+    <color name="color_title_yellow">#FFFFC107</color>
+    <color name="transparent">#00000000</color>
+    <color name="color_skeleton">#FFE0E0E0</color>
+    <color name="color_grey_light">#FFF5F5F5</color>
+    <color name="color_bg_gray">#FFEEEEEE</color>
+    <color name="color_blue_2">#FF1976D2</color>
+    <color name="color_bg">#FFF5F5F5</color>
+</resources>

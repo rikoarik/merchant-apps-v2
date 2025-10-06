@@ -1,0 +1,21 @@
+android.applicationVariants.all { variant ->
+    variant.outputs.all { output ->
+        def flavorName = variant.flavorName
+        def buildType = variant.buildType.name
+        def versionName = variant.versionName
+        def versionCode = variant.versionCode
+        
+        def outputFileName = ""
+        if (output.outputFile.name.endsWith(".apk")) {
+            outputFileName = "SolusiNegeriMerchant-${flavorName}-${buildType}-v${versionName}-${versionCode}.apk"
+        } else if (output.outputFile.name.endsWith(".aab")) {
+            outputFileName = "SolusiNegeriMerchant-${flavorName}-${buildType}-v${versionName}-${versionCode}.aab"
+        } else {
+            outputFileName = output.outputFile.name
+        }
+        
+        output.outputFileName = outputFileName
+    }
+}
+
+

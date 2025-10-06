@@ -1,0 +1,85 @@
+// Build variants configuration
+// This file contains build variant specific configurations
+
+android {
+    // Product flavors configuration
+    flavorDimensions += "environment"
+    
+    productFlavors {
+        create("dev") {
+            dimension = "environment"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+            
+            // Build config fields
+            buildConfigField("String", "BASE_URL", "\"https://api.stg.solusinegeri.com/\"")
+            buildConfigField("boolean", "IS_DEBUG", "true")
+            buildConfigField("boolean", "ENABLE_LOGGING", "true")
+            buildConfigField("boolean", "ENABLE_ANALYTICS", "false")
+            buildConfigField("boolean", "ENABLE_CRASH_REPORTING", "false")
+            buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "false")
+            buildConfigField("boolean", "ENABLE_DEBUG_MENU", "true")
+            buildConfigField("boolean", "ENABLE_MOCK_DATA", "true")
+            
+            // Manifest placeholders
+            manifestPlaceholders["appName"] = "SolusiNegeri Dev"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
+            manifestPlaceholders["appTheme"] = "@style/Theme.SolusiNegeriMerchant"
+        }
+        
+        create("prod") {
+            dimension = "environment"
+            
+            // Build config fields
+            buildConfigField("String", "BASE_URL", "\"https://api.solusinegeri.com/\"")
+            buildConfigField("boolean", "IS_DEBUG", "false")
+            buildConfigField("boolean", "ENABLE_LOGGING", "false")
+            buildConfigField("boolean", "ENABLE_ANALYTICS", "true")
+            buildConfigField("boolean", "ENABLE_CRASH_REPORTING", "true")
+            buildConfigField("boolean", "ENABLE_CERTIFICATE_PINNING", "true")
+            buildConfigField("boolean", "ENABLE_DEBUG_MENU", "false")
+            buildConfigField("boolean", "ENABLE_MOCK_DATA", "false")
+            
+            // Manifest placeholders
+            manifestPlaceholders["appName"] = "SolusiNegeri"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
+            manifestPlaceholders["appTheme"] = "@style/Theme.SolusiNegeriMerchant"
+        }
+    }
+    
+    // Build types configuration
+    buildTypes {
+        debug {
+            isDebuggable = true
+            isMinifyEnabled = false
+            isShrinkResources = false
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            
+            // Debug specific build config
+            buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "true")
+            buildConfigField("boolean", "ENABLE_PERFORMANCE_MONITORING", "false")
+        }
+        
+        release {
+            isDebuggable = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            
+            // Release specific build config
+            buildConfigField("boolean", "ENABLE_DEBUG_FEATURES", "false")
+            buildConfigField("boolean", "ENABLE_PERFORMANCE_MONITORING", "true")
+        }
+    }
+    
+    // Build features
+    buildFeatures {
+        buildConfig = true
+        viewBinding = true
+        dataBinding = true
+    }
+}

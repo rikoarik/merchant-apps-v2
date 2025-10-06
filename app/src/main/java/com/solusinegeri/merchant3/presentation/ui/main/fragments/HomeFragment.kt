@@ -1,0 +1,355 @@
+package com.solusinegeri.merchant3.presentation.ui.main.fragments
+
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.base.BaseFragment
+import com.solusinegeri.merchant3.core.utils.DynamicColors
+import com.solusinegeri.merchant3.core.utils.UIThemeUpdater
+import com.solusinegeri.merchant3.data.responses.BalanceData
+import com.solusinegeri.merchant3.data.responses.MenuData
+import com.solusinegeri.merchant3.databinding.FragmentHomeBinding
+import com.solusinegeri.merchant3.presentation.ui.adapters.MenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.adapters.NewsAdapter
+import com.solusinegeri.merchant3.presentation.ui.main.fragments.handler.MenuHandler
+import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.BalanceCodeManager
+import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.BalanceUtils
+import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.MenuUtils
+import com.solusinegeri.merchant3.presentation.ui.menu.news.NewsInfoActivity
+import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
+import com.solusinegeri.merchant3.presentation.viewmodel.HomeViewModel
+
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
+
+    override val viewModel: HomeViewModel by lazy { HomeViewModel() }
+
+    private lateinit var menuAdapter: MenuAdapter
+    private lateinit var newsAdapter: NewsAdapter
+    private lateinit var menuHandler: MenuHandler
+
+    private var currentBalanceData: BalanceData? = null
+    private var balanceCode: String = "CLOSEPAY"
+
+    // ---- Loading flags untuk kontrol SwipeRefresh ----
+    private var isMenuLoading = false
+    private var isBalanceLoading = false
+    private var isNewsLoading = false
+
+    private fun updateRefreshingIndicator() {
+        val refreshing = isMenuLoading || isBalanceLoading || isNewsLoading
+        binding.swipeRefreshLayout.isRefreshing = refreshing
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
+
+    override fun getViewBinding(view: View): FragmentHomeBinding = FragmentHomeBinding.bind(view)
+
+    override fun setupUI() {
+        super.setupUI()
+
+        initializeComponents()
+        setupMenuRecyclerView()
+        setupNewsRecyclerView()
+        setupSwipeRefresh()
+        setupTextContent()
+        setupBalanceToggle()
+        observeViewModel()
+        updateUIWithDynamicColors()
+        loadHomeData()
+    }
+
+    private fun initializeComponents() {
+        menuHandler = MenuHandler(requireContext())
+        loadBalanceCode()
+    }
+
+    private fun loadBalanceCode() {
+        BalanceCodeManager.initialize(requireContext())
+        balanceCode = arguments?.getString("balanceCode") ?: BalanceCodeManager.getCurrentBalanceCode()
+    }
+
+    override fun setupClickListeners() {
+        super.setupClickListeners()
+
+        binding.topUpMember.setOnClickListener { handleTopUpClick() }
+        binding.withdraw.setOnClickListener { handleWithdrawClick() }
+
+        binding.ivToggleBalance.setOnClickListener {
+            BalanceUtils.toggleBalanceVisibility(
+                binding.tvBalance,
+                binding.ivToggleBalance,
+                currentBalanceData,
+                balanceCode
+            )
+        }
+
+        binding.tvViewAll.setOnClickListener {
+            startActivity(Intent(requireContext(), NewsInfoActivity::class.java))
+        }
+    }
+
+    private fun setupMenuRecyclerView() {
+        menuAdapter = MenuAdapter { menuData -> menuHandler.handleMenuClick(menuData) }
+        binding.rvListMenu.apply {
+            layoutManager = GridLayoutManager(requireContext(), 2)
+            adapter = menuAdapter
+        }
+    }
+
+    private fun setupNewsRecyclerView() {
+        newsAdapter = NewsAdapter { news ->
+            Toast.makeText(requireContext(), news.title ?: "-", Toast.LENGTH_SHORT).show()
+        }
+        binding.rvListNews.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = newsAdapter
+            clipToPadding = false
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefreshLayout.apply {
+            setOnRefreshListener { refreshMenuData() }
+            setColorSchemeResources(
+                R.color.colorPrimaryGreen,
+                R.color.colorPrimaryGreen_dynamic
+            )
+        }
+    }
+
+    private fun setupBalanceToggle() {
+        BalanceUtils.applyInitialState(
+            binding.tvBalance,
+            binding.ivToggleBalance,
+            currentBalanceData,
+            balanceCode
+        )
+    }
+
+    private fun loadHomeData() {
+        viewModel.loadMenuData()
+        viewModel.loadBalanceData(balanceCode)
+        viewModel.loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
+    }
+
+    override fun observeViewModel() {
+        super.observeViewModel()
+
+        // ---- MENU ----
+        viewModel.menuUiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DataUiState.Loading -> {
+                    isMenuLoading = true
+                    updateRefreshingIndicator()
+                }
+                is DataUiState.Success -> {
+                    isMenuLoading = false
+                    updateRefreshingIndicator()
+                }
+                is DataUiState.Error -> {
+                    isMenuLoading = false
+                    updateRefreshingIndicator()
+                    showError(state.message)
+                    viewModel.clearMenuError()
+                }
+                is DataUiState.Idle -> {
+                    isMenuLoading = false
+                    updateRefreshingIndicator()
+                }
+            }
+        }
+
+        viewModel.menuList.observe(viewLifecycleOwner) { menuList ->
+            val visibleMenus = MenuUtils.filterVisibleMenus(menuList)
+            if (visibleMenus.isNotEmpty()) {
+                menuAdapter.updateMenuList(visibleMenus)
+                binding.rvListMenu.visibility = View.VISIBLE
+                MenuUtils.animateRecyclerView(binding.rvListMenu)
+                handleDynamicButtonVisibility(visibleMenus)
+            } else {
+                binding.rvListMenu.visibility = View.GONE
+                binding.llParentCardIncome.visibility = View.GONE
+            }
+        }
+
+        // ---- BALANCE ----
+        viewModel.balanceUiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DataUiState.Loading -> {
+                    isBalanceLoading = true
+                    updateRefreshingIndicator()
+                }
+                is DataUiState.Success -> {
+                    isBalanceLoading = false
+                    updateRefreshingIndicator()
+                }
+                is DataUiState.Error -> {
+                    isBalanceLoading = false
+                    updateRefreshingIndicator()
+                    showError(state.message)
+                    viewModel.clearBalanceError()
+                }
+                is DataUiState.Idle -> {
+                    isBalanceLoading = false
+                    updateRefreshingIndicator()
+                }
+            }
+        }
+
+        viewModel.balanceData.observe(viewLifecycleOwner) { balanceData ->
+            currentBalanceData = balanceData
+            updateBalanceDisplay(balanceData)
+        }
+
+        // ---- NEWS ----
+        viewModel.newsUiState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is DataUiState.Loading -> {
+                    isNewsLoading = true
+                    updateRefreshingIndicator()
+                }
+                is DataUiState.Success -> {
+                    isNewsLoading = false
+                    updateRefreshingIndicator()
+                    val list = state.data.data ?: emptyList()
+                    newsAdapter.updateNewsList(list)
+                    binding.rvListNews.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
+                }
+                is DataUiState.Error -> {
+                    isNewsLoading = false
+                    updateRefreshingIndicator()
+                    binding.rvListNews.visibility = View.GONE
+                    showError(state.message)
+                    viewModel.clearNewsError()
+                }
+                is DataUiState.Idle -> {
+                    isNewsLoading = false
+                    updateRefreshingIndicator()
+                }
+            }
+        }
+    }
+
+    fun refreshMenuData() {
+        viewModel.refreshData(balanceCode)
+        viewModel.loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
+    }
+
+    private fun refreshMenuDataSilent() {
+        viewModel.refreshData(balanceCode)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshMenuDataSilent()
+    }
+
+    fun refreshData() {
+        refreshMenuData()
+    }
+
+    fun refreshDataSilent() {
+        refreshMenuDataSilent()
+    }
+
+    private fun updateUIWithDynamicColors() {
+        val primaryColor = DynamicColors.getPrimaryColor(requireContext())
+        binding.btnNotification.backgroundTintList = ColorStateList.valueOf(primaryColor)
+        binding.ivBanner.setBackgroundColor(primaryColor)
+
+        binding.topUpMember.backgroundTintList = ColorStateList.valueOf(primaryColor)
+        binding.withdraw.backgroundTintList = ColorStateList.valueOf(primaryColor)
+
+        UIThemeUpdater.updateTextColor(binding.tvMenuTitle, requireContext(), true)
+        UIThemeUpdater.updateTextColor(binding.tvStatistic, requireContext(), true)
+        UIThemeUpdater.updateTextColor(binding.tvViewAll, requireContext(), true)
+
+        binding.tvPemasukan.setTextColor(primaryColor)
+        binding.tvPenghasilan.setTextColor(primaryColor)
+        binding.tvPengeluaran.setTextColor(primaryColor)
+        binding.tvTransaction.setTextColor(primaryColor)
+
+        updateIconColors(primaryColor)
+    }
+
+    private fun updateIconColors(primaryColor: Int) {
+        binding.btnStatistic.setColorFilter(primaryColor)
+        binding.btnViewAll.setColorFilter(primaryColor)
+    }
+
+    private fun setupTextContent() {
+        binding.tvTopup.text = getString(R.string.label_isi_saldo)
+        binding.tvWd.text = getString(R.string.label_tarik_saldo)
+        binding.tvMenuTitle.text = getString(R.string.label_fitur_utama)
+        binding.tvStatistic.text = getString(R.string.label_lihat_detail)
+        binding.tvViewAll.text = getString(R.string.label_lihat_semua)
+        binding.tvPemasukan.text = getString(R.string.placeholder_amount)
+        binding.tvPenghasilan.text = getString(R.string.placeholder_percentage)
+        binding.tvPengeluaran.text = getString(R.string.placeholder_amount)
+        binding.tvTransaction.text = getString(R.string.placeholder_count)
+    }
+
+    private fun updateBalanceDisplay(balanceData: BalanceData?) {
+        val visible = BalanceUtils.isBalanceCurrentlyVisible(balanceCode)
+        if (balanceData == null) {
+            if (visible) {
+                binding.tvBalance.text = " Rp 0"
+                binding.ivToggleBalance.text = "Hide"
+            } else {
+                binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
+                binding.ivToggleBalance.text = "Show"
+            }
+            return
+        }
+
+        if (visible) {
+            binding.tvBalance.text = BalanceUtils.formatBalanceWithStatus(balanceData)
+            binding.ivToggleBalance.text = "Hide"
+        } else {
+            binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
+            binding.ivToggleBalance.text = "Show"
+        }
+    }
+
+    override fun showError(message: String) {
+        super.showError(message)
+    }
+
+    private fun handleTopUpClick() {
+        val topUpMenu = viewModel.menuList.value?.find { it.name == "topup_member" }
+        if (topUpMenu != null) menuHandler.handleMenuClick(topUpMenu)
+        else Toast.makeText(requireContext(), "Top Up - Coming Soon", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleWithdrawClick() {
+        val withdrawMenu = viewModel.menuList.value?.find { it.name == "withdraw_balance" }
+        if (withdrawMenu != null) menuHandler.handleMenuClick(withdrawMenu)
+        else Toast.makeText(requireContext(), "Withdraw - Coming Soon", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleDynamicButtonVisibility(menuList: List<MenuData>) {
+        val parent = binding.llParentCardIncome
+        val available = mutableListOf<String>()
+        parent.removeAllViews()
+
+        menuList.forEach { item ->
+            when (item.name) {
+                "topup_member" -> { available.add(item.name); parent.addView(binding.topUpMember) }
+                "withdraw_balance" -> { available.add(item.name); parent.addView(binding.withdraw) }
+            }
+        }
+
+        binding.llParentCardIncome.visibility = if (available.isNotEmpty()) View.VISIBLE else View.GONE
+    }
+}
