@@ -1,4 +1,4 @@
-package com.solusinegeri.merchant3.presentation.ui.main.fragments.config
+package com.solusinegeri.merchant3.presentation.ui.main.config
 
 import com.solusinegeri.merchant3.R
 

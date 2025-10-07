@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
@@ -26,7 +29,9 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = getViewBinding()
+
         setContentView(binding.root)
 
         AutoFontApplier.applyAutoFontToRootView(binding.root)
@@ -58,7 +63,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
         }
     }
 
-    private fun showLoading(show: Boolean) {
+    fun showLoading(show: Boolean) {
         if (show) showLoadingOverlay() else hideLoadingOverlay()
     }
 
@@ -161,6 +166,16 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
             isAppearanceLightStatusBars = true
         }
     }
+
+    fun setupEdgeToEdge() {
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
 
     protected fun makeNavigationBarTransparent() {
         window.navigationBarColor = android.graphics.Color.TRANSPARENT

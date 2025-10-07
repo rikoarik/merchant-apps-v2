@@ -95,7 +95,5 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         startActivity(intent)
         finish()
     }
-    
-    private fun showLoading(show: Boolean) {
-    }
+
 }

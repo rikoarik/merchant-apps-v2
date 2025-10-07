@@ -73,6 +73,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                     val newRoute = when (destination.id) {
                         R.id.homeFragment -> "home"
                         R.id.profileFragment -> "profile"
+                        R.id.newsFragment -> "news"
                         else -> "home"
                     }
                     currentRoute = newRoute
@@ -93,6 +94,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                             if (currentRouteState != "profile") {
                                 navController.navigate(R.id.profileFragment)
                             }
+                        }
+                        "news" -> {
+                            if (currentRouteState != "news") {
+                                navController.navigate(R.id.newsFragment)
+                            }
+                        }
+                        "analytics" -> {
+                            showSuccess("Analytics clicked")
+//                            if (currentRouteState != "analytics") {
+//                                navController.navigate(R.id.analyticsFragment)
+//                            }
                         }
                     }
                 },
@@ -159,6 +171,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             "profile" -> {
                 navigateToHome()
             }
+            "news" -> {
+                navigateToNews()
+            }
+            "analytics" -> {
+//                navigateToNews()
+            }
         }
     }
     
@@ -169,6 +187,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             }
             "profile" -> {
                 navigateToHome()
+            }
+            "news" -> {
+                navigateToNews()
+            }
+            "analytics" -> {
+//                navigateToNews()
             }
         }
     }
@@ -194,6 +218,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             currentRoute = "profile"
         }
     }
+
+    private fun navigateToNews() {
+        if (currentRoute != "news") {
+            Log.d("SwipeNavigation", "Navigating to News")
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(binding.navHostFragment.id) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(R.id.newsFragment)
+            currentRoute = "news"
+        }
+    }
+
+
 
     private fun performSecurityCheck() {
         val securityChecker = com.solusinegeri.merchant3.core.security.SecurityChecker(this)

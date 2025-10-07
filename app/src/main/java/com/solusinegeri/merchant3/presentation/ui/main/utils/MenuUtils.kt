@@ -1,4 +1,4 @@
-package com.solusinegeri.merchant3.presentation.ui.main.fragments.utils
+package com.solusinegeri.merchant3.presentation.ui.main.utils
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -52,7 +52,7 @@ object MenuUtils {
             
             val animatorSet = AnimatorSet()
             animatorSet.playTogether(fadeIn, slideUp)
-            animatorSet.duration = 400
+            animatorSet.duration = 200
             animatorSet.start()
         }
     }
@@ -62,7 +62,7 @@ object MenuUtils {
             alpha = 0f
             
             val fadeIn = ObjectAnimator.ofFloat(this, "alpha", 0f, 1f)
-            fadeIn.duration = 300
+            fadeIn.duration = 100
             fadeIn.start()
         }
     }

@@ -20,14 +20,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+
+            android:orientation="vertical">
 
             <!-- Header Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginBottom="@dimen/medium_margin_twenty_four">
 
                 <TextView
@@ -55,6 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/medium_margin_twenty_four"
                 app:cardCornerRadius="@dimen/_16sdp"
+                android:layout_marginHorizontal="@dimen/_12sdp"
                 app:cardElevation="@dimen/_4sdp"
                 app:cardBackgroundColor="@color/colorPrimaryGreen_dynamic">
 

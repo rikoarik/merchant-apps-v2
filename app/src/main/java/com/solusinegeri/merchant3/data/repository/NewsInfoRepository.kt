@@ -2,6 +2,7 @@ package com.solusinegeri.merchant3.data.repository
 
 import com.solusinegeri.merchant3.data.network.NetworkClient
 import com.solusinegeri.merchant3.data.network.NewsApi
+import com.solusinegeri.merchant3.data.responses.NewsDetailResponse
 import com.solusinegeri.merchant3.data.responses.NewsListResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -48,15 +49,21 @@ class NewsInfoRepository {
         }
     }
 
-    /**
-     * (Opsional) Versi raw Response kalau kamu butuh akses header atau code spesifik.
-     */
-    suspend fun getNewsListRaw(
-        page: Int? = null,
-        size: Int? = null,
-        sortBy: String? = null,
-        dir: Int? = null
-    ) = withContext(Dispatchers.IO) {
-        newsApi.getMerchantNews(page, size, sortBy, dir)
+    suspend fun getNewsDetail(id: String): Result<NewsDetailResponse> = withContext(Dispatchers.IO) {
+        try {
+            val response = newsApi.getInfoMerchantById(id)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    Result.success(body)
+                } else {
+                    Result.failure(Exception("Data berita tidak ditemukan"))
+                }
+            } else {
+                Result.failure(Exception("Gagal memuat berita: ${response.code()} ${response.message()}"))
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Error memuat berita: ${e.message}"))
+        }
     }
 }

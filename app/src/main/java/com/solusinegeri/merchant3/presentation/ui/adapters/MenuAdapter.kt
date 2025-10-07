@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.responses.MenuData
 import com.solusinegeri.merchant3.databinding.ItemListActiveMenuBinding
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.MenuUtils
+import com.solusinegeri.merchant3.presentation.ui.main.utils.MenuUtils
 
 class MenuAdapter(
     private val onMenuClick: (MenuData) -> Unit = {}

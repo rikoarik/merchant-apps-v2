@@ -1,9 +1,9 @@
-package com.solusinegeri.merchant3.presentation.ui.main.fragments.handler
+package com.solusinegeri.merchant3.presentation.ui.main.handler
 
 import android.content.Context
 import android.widget.Toast
 import com.solusinegeri.merchant3.data.responses.MenuData
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.MenuUtils
+import com.solusinegeri.merchant3.presentation.ui.main.utils.MenuUtils
 
 class MenuHandler(private val context: Context) {
 

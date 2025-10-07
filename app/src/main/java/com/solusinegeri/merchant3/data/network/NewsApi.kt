@@ -1,8 +1,10 @@
 package com.solusinegeri.merchant3.data.network
 
+import com.solusinegeri.merchant3.data.responses.NewsDetailResponse
 import com.solusinegeri.merchant3.data.responses.NewsListResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -17,4 +19,9 @@ interface NewsApi {
         @Query("sortBy") sortBy: String? = null,
         @Query("dir") dir: Int? = null
     ): Response<NewsListResponse>
+
+    @GET("/info/merchant/news/detail/{id}")
+    suspend fun getInfoMerchantById(
+        @Path("id") id: String
+    ): Response<NewsDetailResponse>
 }

@@ -1,6 +1,5 @@
 package com.solusinegeri.merchant3.presentation.ui.main.fragments
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseFragment
 import com.solusinegeri.merchant3.core.utils.DynamicColors
@@ -17,12 +15,10 @@ import com.solusinegeri.merchant3.data.responses.BalanceData
 import com.solusinegeri.merchant3.data.responses.MenuData
 import com.solusinegeri.merchant3.databinding.FragmentHomeBinding
 import com.solusinegeri.merchant3.presentation.ui.adapters.MenuAdapter
-import com.solusinegeri.merchant3.presentation.ui.adapters.NewsAdapter
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.handler.MenuHandler
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.BalanceCodeManager
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.BalanceUtils
-import com.solusinegeri.merchant3.presentation.ui.main.fragments.utils.MenuUtils
-import com.solusinegeri.merchant3.presentation.ui.menu.news.NewsInfoActivity
+import com.solusinegeri.merchant3.presentation.ui.main.handler.MenuHandler
+import com.solusinegeri.merchant3.presentation.ui.main.utils.BalanceCodeManager
+import com.solusinegeri.merchant3.presentation.ui.main.utils.BalanceUtils
+import com.solusinegeri.merchant3.presentation.ui.main.utils.MenuUtils
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.HomeViewModel
 
@@ -31,7 +27,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     override val viewModel: HomeViewModel by lazy { HomeViewModel() }
 
     private lateinit var menuAdapter: MenuAdapter
-    private lateinit var newsAdapter: NewsAdapter
     private lateinit var menuHandler: MenuHandler
 
     private var currentBalanceData: BalanceData? = null
@@ -40,10 +35,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     // ---- Loading flags untuk kontrol SwipeRefresh ----
     private var isMenuLoading = false
     private var isBalanceLoading = false
-    private var isNewsLoading = false
 
     private fun updateRefreshingIndicator() {
-        val refreshing = isMenuLoading || isBalanceLoading || isNewsLoading
+        val refreshing = isMenuLoading || isBalanceLoading
         binding.swipeRefreshLayout.isRefreshing = refreshing
     }
 
@@ -60,7 +54,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
 
         initializeComponents()
         setupMenuRecyclerView()
-        setupNewsRecyclerView()
         setupSwipeRefresh()
         setupTextContent()
         setupBalanceToggle()
@@ -94,9 +87,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             )
         }
 
-        binding.tvViewAll.setOnClickListener {
-            startActivity(Intent(requireContext(), NewsInfoActivity::class.java))
-        }
     }
 
     private fun setupMenuRecyclerView() {
@@ -104,17 +94,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         binding.rvListMenu.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = menuAdapter
-        }
-    }
-
-    private fun setupNewsRecyclerView() {
-        newsAdapter = NewsAdapter { news ->
-            Toast.makeText(requireContext(), news.title ?: "-", Toast.LENGTH_SHORT).show()
-        }
-        binding.rvListNews.apply {
-            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            adapter = newsAdapter
-            clipToPadding = false
         }
     }
 
@@ -212,33 +191,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             updateBalanceDisplay(balanceData)
         }
 
-        // ---- NEWS ----
-        viewModel.newsUiState.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is DataUiState.Loading -> {
-                    isNewsLoading = true
-                    updateRefreshingIndicator()
-                }
-                is DataUiState.Success -> {
-                    isNewsLoading = false
-                    updateRefreshingIndicator()
-                    val list = state.data.data ?: emptyList()
-                    newsAdapter.updateNewsList(list)
-                    binding.rvListNews.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
-                }
-                is DataUiState.Error -> {
-                    isNewsLoading = false
-                    updateRefreshingIndicator()
-                    binding.rvListNews.visibility = View.GONE
-                    showError(state.message)
-                    viewModel.clearNewsError()
-                }
-                is DataUiState.Idle -> {
-                    isNewsLoading = false
-                    updateRefreshingIndicator()
-                }
-            }
-        }
     }
 
     fun refreshMenuData() {
@@ -272,53 +224,36 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         binding.withdraw.backgroundTintList = ColorStateList.valueOf(primaryColor)
 
         UIThemeUpdater.updateTextColor(binding.tvMenuTitle, requireContext(), true)
-        UIThemeUpdater.updateTextColor(binding.tvStatistic, requireContext(), true)
-        UIThemeUpdater.updateTextColor(binding.tvViewAll, requireContext(), true)
 
-        binding.tvPemasukan.setTextColor(primaryColor)
-        binding.tvPenghasilan.setTextColor(primaryColor)
-        binding.tvPengeluaran.setTextColor(primaryColor)
-        binding.tvTransaction.setTextColor(primaryColor)
-
-        updateIconColors(primaryColor)
+        binding.btnNotification.backgroundTintList = ColorStateList.valueOf(primaryColor)
     }
 
-    private fun updateIconColors(primaryColor: Int) {
-        binding.btnStatistic.setColorFilter(primaryColor)
-        binding.btnViewAll.setColorFilter(primaryColor)
-    }
 
     private fun setupTextContent() {
         binding.tvTopup.text = getString(R.string.label_isi_saldo)
         binding.tvWd.text = getString(R.string.label_tarik_saldo)
         binding.tvMenuTitle.text = getString(R.string.label_fitur_utama)
-        binding.tvStatistic.text = getString(R.string.label_lihat_detail)
-        binding.tvViewAll.text = getString(R.string.label_lihat_semua)
-        binding.tvPemasukan.text = getString(R.string.placeholder_amount)
-        binding.tvPenghasilan.text = getString(R.string.placeholder_percentage)
-        binding.tvPengeluaran.text = getString(R.string.placeholder_amount)
-        binding.tvTransaction.text = getString(R.string.placeholder_count)
     }
 
     private fun updateBalanceDisplay(balanceData: BalanceData?) {
         val visible = BalanceUtils.isBalanceCurrentlyVisible(balanceCode)
         if (balanceData == null) {
             if (visible) {
-                binding.tvBalance.text = " Rp 0"
-                binding.ivToggleBalance.text = "Hide"
+                binding.tvBalance.text = getString(R.string.placeholder_balance)
+                binding.ivToggleBalance.text = getString(R.string.hide_balance)
             } else {
                 binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
-                binding.ivToggleBalance.text = "Show"
+                binding.ivToggleBalance.text = getString(R.string.show_balance)
             }
             return
         }
 
         if (visible) {
             binding.tvBalance.text = BalanceUtils.formatBalanceWithStatus(balanceData)
-            binding.ivToggleBalance.text = "Hide"
+            binding.ivToggleBalance.text = getString(R.string.hide_balance)
         } else {
             binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
-            binding.ivToggleBalance.text = "Show"
+            binding.ivToggleBalance.text = getString(R.string.show_balance)
         }
     }
 

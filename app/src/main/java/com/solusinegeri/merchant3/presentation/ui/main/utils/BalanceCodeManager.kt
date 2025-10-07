@@ -1,4 +1,4 @@
-package com.solusinegeri.merchant3.presentation.ui.main.fragments.utils
+package com.solusinegeri.merchant3.presentation.ui.main.utils
 
 import android.content.Context
 import com.solusinegeri.merchant3.core.utils.PreferenceManager

@@ -1,12 +1,10 @@
-package com.solusinegeri.merchant3.presentation.ui.menu.adapter
-
+package com.solusinegeri.merchant3.presentation.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.solusinegeri.merchant3.R
-import com.solusinegeri.merchant3.core.utils.DateUtils
 import com.solusinegeri.merchant3.data.responses.NewsData
 import com.solusinegeri.merchant3.databinding.ItemLoadingBinding
 import com.solusinegeri.merchant3.databinding.NewsItemBinding
@@ -71,7 +69,7 @@ class NewsPagingAdapter(
             tvDesc.text = when {
                 !news.subTitle.isNullOrBlank() -> news.subTitle
                 !news.description.isNullOrBlank() -> news.description
-                else -> ""
+                else -> "-"
             }
 
             val thumbUrl = news.imageUrl?.firstOrNull()
@@ -82,7 +80,7 @@ class NewsPagingAdapter(
                 .error(R.drawable.img_broken)
                 .into(ivThumbnail)
 
-            tvDatetime.text = DateUtils.formatDateTime(news.createdTime)
+            tvDatetime.text = news.createdTime ?: "-"
 
             root.setOnClickListener { onItemClick(news) }
         }

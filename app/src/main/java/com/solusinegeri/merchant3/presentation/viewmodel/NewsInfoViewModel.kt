@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.data.repository.NewsInfoRepository
+import com.solusinegeri.merchant3.data.responses.NewsDetailResponse
 import com.solusinegeri.merchant3.data.responses.NewsListResponse
 
 class NewsInfoViewModel : BaseViewModel() {
@@ -13,6 +14,9 @@ class NewsInfoViewModel : BaseViewModel() {
     // ===== News state =====
     private val _newsUiState = MutableLiveData<DataUiState<NewsListResponse>>()
     val newsUiState: LiveData<DataUiState<NewsListResponse>> = _newsUiState
+
+    private val _newsDetailUiState = MutableLiveData<DataUiState<NewsDetailResponse>>()
+    val newsDetailUiState: LiveData<DataUiState<NewsDetailResponse>> = _newsDetailUiState
 
     fun loadNewsData(
         page: Int? = null,
@@ -31,6 +35,19 @@ class NewsInfoViewModel : BaseViewModel() {
                 _newsUiState.value = DataUiState.Success(newsResponse, "Berita berhasil dimuat")
             }.onFailure { error ->
                 _newsUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
+                setError(error.message ?: "Gagal memuat berita")
+            }
+        }
+    }
+
+    fun loadNewsDetail(id: String) {
+        _newsDetailUiState.value = DataUiState.Loading
+        launchCoroutine(showLoading = false) {
+            newsRepository.getNewsDetail(id)
+                .onSuccess { newsDetailResponse ->
+                _newsDetailUiState.value = DataUiState.Success(newsDetailResponse, "Berita berhasil dimuat")
+            }.onFailure { error ->
+                _newsDetailUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
                 setError(error.message ?: "Gagal memuat berita")
             }
         }

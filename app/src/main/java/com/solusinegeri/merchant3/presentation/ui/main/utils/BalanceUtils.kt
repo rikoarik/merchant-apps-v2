@@ -1,4 +1,4 @@
-package com.solusinegeri.merchant3.presentation.ui.main.fragments.utils
+package com.solusinegeri.merchant3.presentation.ui.main.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -99,8 +99,8 @@ object BalanceUtils {
     }
 
     private fun animateTextChange(textView: TextView, newText: String) {
-        val fadeOut = ObjectAnimator.ofFloat(textView, "alpha", 1f, 0f).apply { duration = 150 }
-        val fadeIn = ObjectAnimator.ofFloat(textView, "alpha", 0f, 1f).apply { duration = 150 }
+        val fadeOut = ObjectAnimator.ofFloat(textView, "alpha", 1f, 0f).apply { ObjectAnimator.setDuration = 150 }
+        val fadeIn = ObjectAnimator.ofFloat(textView, "alpha", 0f, 1f).apply { ObjectAnimator.setDuration = 150 }
 
         fadeOut.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
