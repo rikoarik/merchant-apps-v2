@@ -1,5 +1,6 @@
 package com.solusinegeri.merchant3.presentation.ui.main.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
 import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.profiles.ProfileEditActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.OperationUiState
@@ -49,6 +51,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     
     override fun setupUI() {
         super.setupUI()
+
         initializeAuthRepository()
         setupRecyclerView()
         setupMenuItems()
@@ -244,7 +247,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
     
     private fun handleEditProfile() {
-        Toast.makeText(requireContext(), "Edit Profil - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, ProfileEditActivity::class.java)
+        startActivity(intent)
+//        Toast.makeText(requireContext(), "Edit Profil - Coming Soon", Toast.LENGTH_SHORT).show()
     }
     
     private fun handleChangePin() {

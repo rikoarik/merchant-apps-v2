@@ -17,6 +17,9 @@
         android:theme="@style/Theme.SolusiNegeriMerchant"
         android:usesCleartextTraffic="false">
         <activity
+            android:name=".presentation.ui.menu.profiles.ProfileEditActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.ui.menu.analytics.AnalyticsActivity"
             android:exported="false" />
         <activity

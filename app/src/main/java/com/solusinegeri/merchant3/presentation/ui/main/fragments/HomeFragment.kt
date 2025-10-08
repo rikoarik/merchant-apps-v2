@@ -225,7 +225,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
 
         UIThemeUpdater.updateTextColor(binding.tvMenuTitle, requireContext(), true)
 
-        binding.btnNotification.backgroundTintList = ColorStateList.valueOf(primaryColor)
+        binding.btnNotification.imageTintList = ColorStateList.valueOf(primaryColor)
     }
 
 
