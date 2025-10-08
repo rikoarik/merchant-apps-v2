@@ -209,18 +209,6 @@ app/src/main/java/com/solusinegeri/merchant3/
 4. Choose build variant (dev/prod) based on your needs
 5. Run the app
 
-### Build Variants
-
-- **dev**: Development environment with debug logging enabled
-  - Base URL: `https://api.stg.solusinegeri.com/`
-  - Application ID suffix: `.dev`
-  - Debug logging enabled
-
-- **prod**: Production environment with optimized settings
-  - Base URL: `https://api.solusinegeri.com/`
-  - Debug logging disabled
-  - Code minification enabled
-
 ## Usage
 
 ### Authentication
