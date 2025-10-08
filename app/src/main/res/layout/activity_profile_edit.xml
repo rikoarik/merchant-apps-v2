@@ -34,6 +34,7 @@
                 tools:ignore="ContentDescription" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_profile_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="true"
@@ -44,7 +45,7 @@
 
     <!-- Logout Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_logout"
+        android:id="@+id/btn_edit_profile"
         android:layout_width="0dp"
         android:layout_height="@dimen/_56sdp"
         android:layout_margin="@dimen/_16sdp"

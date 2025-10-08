@@ -8,6 +8,8 @@ data class ProfileMenuItem(
 )
 
 data class ProfileEditItem(
-    val id: String,
-    val title: String
+    val id      : String,
+    val title   : String,
+    var content : String,
+    val editable: Boolean
 )
