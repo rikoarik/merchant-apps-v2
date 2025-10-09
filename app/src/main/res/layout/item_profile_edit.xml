@@ -14,9 +14,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
 
-        android:text     ="Menu Title"
         android:textColor="@color/text_primary_dynamic"
         android:textSize ="@dimen/text_size_large"
+        android:text     ="Menu Title"
 
         tools:ignore="HardcodedText" />
 
@@ -32,8 +32,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ed_edit"
-            android:layout_width="match_parent"
             android:layout_height="@dimen/_56sdp"
-            tools:ignore="HardcodedText" />
+            android:layout_width ="match_parent"
+            android:singleLine   ="true"
+            tools:ignore="SpeakableTextPresentCheck" />
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
