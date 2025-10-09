@@ -21,6 +21,7 @@ import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
 import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.profiles.PasswordEditActivity
 import com.solusinegeri.merchant3.presentation.ui.menu.profiles.ProfileEditActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
@@ -249,7 +250,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     private fun handleEditProfile() {
         val intent = Intent(this.context, ProfileEditActivity::class.java)
         startActivity(intent)
-//        Toast.makeText(requireContext(), "Edit Profil - Coming Soon", Toast.LENGTH_SHORT).show()
     }
     
     private fun handleChangePin() {
@@ -257,7 +257,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
     
     private fun handleChangePassword() {
-        Toast.makeText(requireContext(), "Ubah Password - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, PasswordEditActivity::class.java)
+        startActivity(intent)
     }
     
     private fun handleMerchantLocation() {

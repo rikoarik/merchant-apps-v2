@@ -43,13 +43,13 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Logout Button -->
+    <!-- Save Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit_profile"
         android:layout_width="0dp"
         android:layout_height="@dimen/_56sdp"
         android:layout_margin="@dimen/_16sdp"
-        android:text="Edit"
+        android:text="@string/action_save"
         android:textAllCaps="false"
         android:textColor="@color/white_dynamic"
         android:textSize="@dimen/text_size_large"
@@ -58,7 +58,6 @@
         app:cornerRadius="@dimen/_12sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="HardcodedText" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

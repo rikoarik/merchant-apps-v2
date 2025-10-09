@@ -1,7 +1,7 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.R.color
@@ -35,8 +35,8 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         setupRecyclerItems()
         updateUIWithDynamicColors()
         setupOnClickListeners()
+        setupTypefaces()
     }
-
 
     override fun setupStatusBar() {
         super.setupStatusBar()
@@ -62,6 +62,14 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         binding.toolbar.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
+    private fun setupTypefaces(){
+        val bold = Typeface.create("", Typeface.BOLD)
+
+        //Setup toolbar title typeface
+        binding.toolbar.tvTitle.typeface = bold
+    }
+
+    //region recyclerview initialisation
     private fun setupRecyclerView(){
         itemAdapter = ProfileContentAdapter(emptyList())
         itemAdapter.setEnableEditable(true)
@@ -77,19 +85,19 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         val items = listOf(
             ProfileEditItem(
                 id       = USER_MAP_NAME,
-                title    = getString(string.profile_edit_name),
+                title    = getString(string.profile_edit_name_item),
                 content  = userData[USER_MAP_NAME] ?: getString(string.placeholder_name),
                 editable = true
             ),
             ProfileEditItem(
                 id       = USER_MAP_ID,
-                title    = getString(string.profile_edit_id),
+                title    = getString(string.profile_edit_id_item),
                 content  = userData[USER_MAP_ID] ?: getString(string.placeholder_user_id),
                 editable = false
             ),
             ProfileEditItem(
                 id       = USER_MAP_EMAIL,
-                title    = getString(string.profile_edit_email),
+                title    = getString(string.profile_edit_email_item),
                 content  = userData[USER_MAP_EMAIL] ?: getString(string.placeholder_email),
                 editable = true
             )
@@ -97,7 +105,9 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
         itemAdapter.addRecyclerItems(items)
     }
+    //endregion
 
+    //region click listener initialisation
     private fun setupOnClickListeners(){
         binding.btnEditProfile.setOnClickListener {
             val userEditData = itemAdapter.getEditTextData() //Returns a map of edited data
@@ -105,4 +115,5 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             //I haven't made the the edit account logic and how it would be controlled. So yeah :3
         }
     }
+    //endregion
 }

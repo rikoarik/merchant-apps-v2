@@ -13,12 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_width ="match_parent"
         android:hint         ="@string/placeholder_menu_title"
-        app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
+
         app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-        app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+        app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
         app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
-        app:hintTextColor             ="@color/black"
-        app:boxBackgroundColor        ="@color/white_dynamic">
+        app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+
+        app:boxBackgroundColor        ="@color/white_dynamic"
+        app:hintTextColor             ="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ed_edit"
