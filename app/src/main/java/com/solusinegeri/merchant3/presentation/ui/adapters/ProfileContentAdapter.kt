@@ -2,6 +2,7 @@ package com.solusinegeri.merchant3.presentation.ui.adapters
 
 import android.R.color
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -43,8 +44,8 @@ class ProfileContentAdapter (
         private val binding: ItemProfileEditBinding
     ) : RecyclerView.ViewHolder(binding.root){
         fun bind( itemData : ProfileEditItem ){
-            binding.tvTitle.text = itemData.title
             binding.edEdit .setText(itemData.content)
+            binding.edBox  .hint = itemData.title
             binding.edBox  .boxStrokeColor = boxSpotColor
 
             if(!itemData.editable || !isEdit){
@@ -59,6 +60,7 @@ class ProfileContentAdapter (
                     }
                 }
             }
+            // Sets the
             else{
                 binding.edEdit.apply {
                     fontVariationSettings = TEXT_WGHT_NORMAL
