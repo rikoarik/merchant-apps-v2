@@ -1,0 +1,104 @@
+package com.solusinegeri.merchant3.presentation.ui.adapters
+
+import android.R.color
+import android.annotation.SuppressLint
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.solusinegeri.merchant3.data.model.ProfileEditItem
+import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
+
+@Suppress("DEPRECATION")
+@SuppressLint("NotifyDataSetChanged")
+class ProfileContentAdapter (
+    var editItems   : List<ProfileEditItem>
+) : RecyclerView.Adapter<ProfileContentAdapter.ProfileContentViewHolder>() {
+
+    private var isEdit: Boolean   = false
+    private var boxSpotColor: Int = 0
+
+    private val TEXT_WGHT_BOLD   = "'wght' 700"
+    private val TEXT_WGHT_NORMAL = "'wght' 400"
+    private val TEXT_WGHT_LIGHT  = "'wght' 300"
+
+    override fun onCreateViewHolder( parent: ViewGroup, viewType: Int): ProfileContentViewHolder {
+        val binding = ItemProfileEditBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ProfileContentViewHolder(binding)
+    }
+
+    override fun onBindViewHolder( holder: ProfileContentViewHolder, position: Int ) {
+        holder.bind(editItems[position])
+    }
+
+    override fun getItemCount(): Int = editItems.size
+
+    inner class ProfileContentViewHolder(
+        private val binding: ItemProfileEditBinding
+    ) : RecyclerView.ViewHolder(binding.root){
+        fun bind( itemData : ProfileEditItem ){
+            binding.tvTitle.text = itemData.title
+            binding.edEdit .setText(itemData.content)
+            binding.edBox  .boxStrokeColor = boxSpotColor
+
+            if(!itemData.editable || !isEdit){
+                binding.edEdit.apply {
+                    isFocusable           = false
+                    inputType             = InputType.TYPE_NULL
+                }
+                if(!itemData.editable && isEdit){
+                    binding.edEdit.apply {
+                        fontVariationSettings = TEXT_WGHT_LIGHT
+                        setTextColor(resources.getColor(color.darker_gray))
+                    }
+                }
+            }
+            else{
+                binding.edEdit.apply {
+                    fontVariationSettings = TEXT_WGHT_NORMAL
+                    addTextChangedListener(object: TextWatcher{
+                        override fun afterTextChanged (s: Editable?) {
+                            itemData.content = s.toString()
+                            binding.edEdit.fontVariationSettings = TEXT_WGHT_BOLD
+                        }
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after : Int) {}
+                        override fun onTextChanged    (s: CharSequence?, start: Int, count: Int, before: Int) {}
+                    })
+                }
+            }
+        }
+    }
+
+    //region Recycler View Data Controller
+
+    //Adds data to the recyclerview
+    fun addRecyclerItems(data : List<ProfileEditItem>){
+        editItems += data
+        notifyDataSetChanged()
+    }
+
+    ///Clears data from the recyclerview
+    fun clearRecyclerItems(){
+        editItems = listOf<ProfileEditItem>()
+        notifyDataSetChanged()
+    }
+
+    //endregion
+
+    fun setBoxSpotColor(color: Int){
+        boxSpotColor = color
+        notifyDataSetChanged()
+    }
+
+    fun setEnableEditable(state: Boolean){ isEdit = state }
+
+    fun getEditTextData() : Map<String, String> = editItems.associate { it.id to it.content }
+
+
+}
