@@ -17,7 +17,14 @@
         android:theme="@style/Theme.SolusiNegeriMerchant"
         android:usesCleartextTraffic="false">
         <activity
-            android:name=".presentation.ui.menu.profiles.PasswordEditActivity"
+            android:name=".presentation.ui.menu.menupin.ForgotPinActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SolusiNegeriMerchant" />
+        <activity
+            android:name=".presentation.ui.menu.menupin.ChangePinActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.ui.menu.menupin.PinMenuActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.menu.profiles.ProfileEditActivity"
