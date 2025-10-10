@@ -15,6 +15,7 @@
         <item name="colorError">@color/error</item>
         <item name="colorOnError">@color/white</item>
 
+
         <!-- Status Bar Configuration -->
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:windowLightStatusBar">true</item>

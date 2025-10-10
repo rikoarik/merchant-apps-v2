@@ -157,9 +157,12 @@
     <string name="no_content_available">Konten belum tersedia</string>
 
     <!-- Edit Profile Items-->
-    <string name="profile_edit_name" >Nama:</string>
-    <string name="profile_edit_id"   >Nomor ID:</string>
+    <string name="profile_edit_name">Nama:</string>
+    <string name="profile_edit_id">Nomor ID:</string>
     <string name="profile_edit_email">Email:</string>
+
+    <!-- Ganti Pin Menu -->
+    <string name="Pin_name">Pin</string>
 
     <!-- Format teks dinamis -->
     <string name="by_name_format">Oleh: %1$s</string>
