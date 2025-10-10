@@ -1,15 +1,25 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
+import android.R
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.core.base.BaseActivity
 import com.solusinegeri.merchant3.core.utils.DynamicColors
+import com.solusinegeri.merchant3.data.model.PasswordEditModel
+import com.solusinegeri.merchant3.data.repository.PasswordRepository
 import com.solusinegeri.merchant3.databinding.ActivityPasswordEditBinding
-import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
+import com.solusinegeri.merchant3.presentation.viewmodel.PasswordEditState
+import com.solusinegeri.merchant3.presentation.viewmodel.PasswordViewModel
 
-class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, ProfileViewModel>() {
-    override val viewModel: ProfileViewModel by lazy {ProfileViewModel()}
+class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, PasswordViewModel>() {
+    override val viewModel: PasswordViewModel by lazy {
+        PasswordViewModel(
+            PasswordRepository(
+                this.baseContext
+            )
+        )
+    }
 
     val PASS_OLD_ITEM     = "pass_old"
     val PASS_NEW_ITEM     = "pass_new"
@@ -22,11 +32,14 @@ class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, ProfileVi
         setupTypefaces()
         setupOnClickListeners()
         updateUIWithDynamicColors()
+        observeViewModel()
     }
 
     override fun getViewBinding(): ActivityPasswordEditBinding {
         return ActivityPasswordEditBinding.inflate(layoutInflater)
     }
+
+    //region UI Initialisation
 
     private fun setupToolbar(){
         binding.toolbar.apply {
@@ -60,15 +73,43 @@ class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, ProfileVi
     private fun setupOnClickListeners(){
         binding.btnEditPassword.setOnClickListener {
             val textBoxTexts = getTextData()
-            println(textBoxTexts)
+            viewModel.changePass(
+                oldPassword     = textBoxTexts.oldPassword,
+                newPassword     = textBoxTexts.password,
+                confirmPassword = textBoxTexts.confirmPassword
+            )
+        }
+    }
+    //endregion
+
+    override fun observeViewModel() {
+        super.observeViewModel()
+
+        viewModel.changePasswordState.observe(this){ state ->
+            when(state){
+                is PasswordEditState.Error ->{
+                    binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
+                }
+                is PasswordEditState.Loading -> {
+                    binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
+                }
+                is PasswordEditState.Success -> {
+                    val colorPrimary = DynamicColors.getPrimaryColor(this.baseContext)
+                    binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(colorPrimary)
+                }
+
+                is PasswordEditState.Idle -> {
+
+                }
+            }
         }
     }
 
-    private fun getTextData() : Map<String, String>{
-        return mapOf(
-            PASS_OLD_ITEM     to binding.edOld.text.toString(),
-            PASS_NEW_ITEM     to binding.edNew.text.toString(),
-            PASS_CONFRIM_ITEM to binding.edConfirm.text.toString()
+    private fun getTextData() : PasswordEditModel{
+        return PasswordEditModel(
+            oldPassword     = binding.edOld.text.toString().trim(),
+            password        = binding.edNew.text.toString().trim(),
+            confirmPassword = binding.edConfirm.text.toString().trim()
         )
     }
 }
