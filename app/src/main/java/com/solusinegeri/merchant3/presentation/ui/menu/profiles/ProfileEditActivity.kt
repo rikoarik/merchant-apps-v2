@@ -38,7 +38,6 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         setupTypefaces()
     }
 
-
     override fun setupStatusBar() {
         super.setupStatusBar()
         setStatusBarColor(getColor(color.white), true)
@@ -63,7 +62,14 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         binding.toolbar.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
-    //region Initialise recyclerview
+    private fun setupTypefaces(){
+        val bold = Typeface.create("", Typeface.BOLD)
+
+        //Setup toolbar title typeface
+        binding.toolbar.tvTitle.typeface = bold
+    }
+
+    //region recyclerview initialisation
     private fun setupRecyclerView(){
         itemAdapter = ProfileContentAdapter(emptyList())
         itemAdapter.setEnableEditable(true)
@@ -101,6 +107,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
     }
     //endregion
 
+    //region click listener initialisation
     private fun setupOnClickListeners(){
         binding.btnEditProfile.setOnClickListener {
             val userEditData = itemAdapter.getEditTextData() //Returns a map of edited data
@@ -108,11 +115,5 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             //I haven't made the the edit account logic and how it would be controlled. So yeah :3
         }
     }
-
-    private fun setupTypefaces(){
-        val bold = Typeface.create("", Typeface.BOLD)
-
-        //Setup toolbar title typeface
-        binding.toolbar.tvTitle.typeface = bold
-    }
+    //endregion
 }

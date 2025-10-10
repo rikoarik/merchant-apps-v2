@@ -78,6 +78,7 @@
     <string name="action_next">Selanjutnya</string>
     <string name="action_finish">Selesai</string>
     <string name="action_skip">Lewati</string>
+    <string name="action_confirm">Konfirmasi</string>
 
     <!-- Navigation -->
     <string name="nav_home">Beranda</string>
@@ -148,6 +149,7 @@
     <string name="loading">Loading</string>
     <string name="news">Berita</string>
     <string name="edit_profile">Edit Profil</string>
+    <string name="edit_password">Ganti Password</string>
 
     <string name="hide_balance">Hide</string>
     <string name="show_balance">Show</string>
@@ -163,6 +165,15 @@
 
     <!-- Ganti Pin Menu -->
     <string name="Pin_name">Pin</string>
+    <string name="profile_edit_id_item"   >Nomor ID</string>
+    <string name="profile_edit_email_item">Email</string>
+    <string name="profile_edit_name_item" >Nama</string>
+
+    <!-- Edit Password Items-->
+    <string name="password_edit_description" >Masukan data yang diperlukan untuk mengganti PIN anda</string>
+    <string name="password_edit_confirm_item">Konfirmasi Password Baru</string>
+    <string name="password_edit_old_item"    >Password Lama</string>
+    <string name="password_edit_new_item"    >Password Baru</string>
 
     <!-- Format teks dinamis -->
     <string name="by_name_format">Oleh: %1$s</string>

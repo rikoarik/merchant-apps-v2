@@ -43,7 +43,7 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Logout Button -->
+    <!-- Save Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_edit_profile"
         android:layout_width="0dp"
