@@ -1,7 +1,7 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
-import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.R.color
@@ -35,6 +35,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         setupRecyclerItems()
         updateUIWithDynamicColors()
         setupOnClickListeners()
+        setupTypefaces()
     }
 
 
@@ -106,5 +107,12 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
             //I haven't made the the edit account logic and how it would be controlled. So yeah :3
         }
+    }
+
+    private fun setupTypefaces(){
+        val bold = Typeface.create("", Typeface.BOLD)
+
+        //Setup toolbar title typeface
+        binding.toolbar.tvTitle.typeface = bold
     }
 }
