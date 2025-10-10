@@ -157,9 +157,9 @@
     <string name="no_content_available">Konten belum tersedia</string>
 
     <!-- Edit Profile Items-->
-    <string name="profile_edit_name" >Nama</string>
-    <string name="profile_edit_id"   >Nomor ID</string>
-    <string name="profile_edit_email">Email</string>
+    <string name="profile_edit_name_item" >Nama</string>
+    <string name="profile_edit_id_item"   >Nomor ID</string>
+    <string name="profile_edit_email_item">Email</string>
 
     <!-- Format teks dinamis -->
     <string name="by_name_format">Oleh: %1$s</string>

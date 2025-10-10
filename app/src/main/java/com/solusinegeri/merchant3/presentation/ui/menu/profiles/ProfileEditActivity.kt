@@ -62,6 +62,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         binding.toolbar.ivBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
+    //region Initialise recyclerview
     private fun setupRecyclerView(){
         itemAdapter = ProfileContentAdapter(emptyList())
         itemAdapter.setEnableEditable(true)
@@ -77,19 +78,19 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         val items = listOf(
             ProfileEditItem(
                 id       = USER_MAP_NAME,
-                title    = getString(string.profile_edit_name),
+                title    = getString(string.profile_edit_name_item),
                 content  = userData[USER_MAP_NAME] ?: getString(string.placeholder_name),
                 editable = true
             ),
             ProfileEditItem(
                 id       = USER_MAP_ID,
-                title    = getString(string.profile_edit_id),
+                title    = getString(string.profile_edit_id_item),
                 content  = userData[USER_MAP_ID] ?: getString(string.placeholder_user_id),
                 editable = false
             ),
             ProfileEditItem(
                 id       = USER_MAP_EMAIL,
-                title    = getString(string.profile_edit_email),
+                title    = getString(string.profile_edit_email_item),
                 content  = userData[USER_MAP_EMAIL] ?: getString(string.placeholder_email),
                 editable = true
             )
@@ -97,6 +98,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
         itemAdapter.addRecyclerItems(items)
     }
+    //endregion
 
     private fun setupOnClickListeners(){
         binding.btnEditProfile.setOnClickListener {
