@@ -20,6 +20,7 @@ import com.solusinegeri.merchant3.data.model.ProfileMenuItem
 import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
+import com.solusinegeri.merchant3.presentation.ui.menu.menupin.PinMenuActivity
 import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
 import com.solusinegeri.merchant3.presentation.ui.menu.profiles.ProfileEditActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
@@ -100,8 +101,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
         binding.btnEditProfile.setOnClickListener {
             handleEditProfile()
         }
+
+//        binding.btnGantiPin.setOnClickListener {
+//            handleChangePin()
+//        }
     }
-    
+
     private fun handleLogout() {
         try {
             authRepository.logout()
@@ -253,7 +258,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
     
     private fun handleChangePin() {
-        Toast.makeText(requireContext(), "Ubah PIN - Coming Soon", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "Ubah PIN - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, PinMenuActivity::class.java)
+        startActivity(intent)
     }
     
     private fun handleChangePassword() {

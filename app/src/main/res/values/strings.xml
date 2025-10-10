@@ -161,6 +161,9 @@
     <string name="profile_edit_id_item"   >Nomor ID</string>
     <string name="profile_edit_email_item">Email</string>
 
+    <!-- Ganti Pin Menu -->
+    <string name="Pin_name">Pin</string>
+
     <!-- Format teks dinamis -->
     <string name="by_name_format">Oleh: %1$s</string>
 
