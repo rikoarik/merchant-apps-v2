@@ -125,6 +125,16 @@ object SecureStorage {
         val prefs = getEncryptedPrefs(context)
         return prefs.getString(KEY_USER_PASSWORD, null)
     }
+
+    /**
+     * Simpan Password setelah ubah
+     */
+    fun savePassword(context: Context, password: String) {
+        val prefs = getEncryptedPrefs(context)
+        prefs.edit {
+            putString(KEY_USER_PASSWORD, password)
+        }
+    }
     
     /**
      * Clear login credentials

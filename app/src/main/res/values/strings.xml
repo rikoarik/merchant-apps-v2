@@ -165,9 +165,6 @@
 
     <!-- Ganti Pin Menu -->
     <string name="Pin_name">Pin</string>
-    <string name="profile_edit_id_item"   >Nomor ID</string>
-    <string name="profile_edit_email_item">Email</string>
-    <string name="profile_edit_name_item" >Nama</string>
 
     <!-- Edit Password Items-->
     <string name="password_edit_description" >Masukan data yang diperlukan untuk mengganti PIN anda</string>
