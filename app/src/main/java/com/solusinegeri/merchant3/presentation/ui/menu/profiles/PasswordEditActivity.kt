@@ -1,10 +1,12 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
 import android.R
+import android.app.AlertDialog
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.core.base.BaseActivity
+import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.PasswordEditModel
 import com.solusinegeri.merchant3.data.repository.PasswordRepository
@@ -20,10 +22,6 @@ class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, PasswordV
             )
         )
     }
-
-    val PASS_OLD_ITEM     = "pass_old"
-    val PASS_NEW_ITEM     = "pass_new"
-    val PASS_CONFRIM_ITEM = "pass_confirm"
 
     override fun setupUI() {
         super.setupUI()
@@ -88,18 +86,20 @@ class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, PasswordV
         viewModel.changePasswordState.observe(this){ state ->
             when(state){
                 is PasswordEditState.Error ->{
+                    binding.btnEditPassword.setError(state.message)
                     binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
                 }
                 is PasswordEditState.Loading -> {
                     binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
+                    binding.btnEditPassword.setLoading(true)
                 }
                 is PasswordEditState.Success -> {
-                    val colorPrimary = DynamicColors.getPrimaryColor(this.baseContext)
-                    binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(colorPrimary)
+                    binding.btnEditPassword.setSuccess(state.message)
+                    viewModel.showDialogue(this)
                 }
-
                 is PasswordEditState.Idle -> {
-
+                    binding.btnEditPassword.reset()
+                    onBackPressedDispatcher.onBackPressed()
                 }
             }
         }

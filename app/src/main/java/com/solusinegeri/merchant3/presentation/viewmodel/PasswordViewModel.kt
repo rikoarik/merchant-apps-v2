@@ -1,8 +1,12 @@
 package com.solusinegeri.merchant3.presentation.viewmodel
 
+import android.R.color
+import android.app.AlertDialog
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.core.base.BaseViewModel
+import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.repository.PasswordRepository
 
 sealed class PasswordEditState{
@@ -36,6 +40,26 @@ class PasswordViewModel(private var repository: PasswordRepository) : BaseViewMo
                 _changePasswordState.value = PasswordEditState.Error(message)
                 setError(message)
             }
+        }
+    }
+
+    //TODO(Replace with custom pup up at BaseViewModel)
+    fun showDialogue(context: Context) {
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Berhasil")
+            .setMessage("Password Berhasil Diubah")
+            .setPositiveButton("Lanjut") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                _changePasswordState.value = PasswordEditState.Idle
+            }
+            .setCancelable(false)
+            .create()
+
+        dialog.show()
+        val primaryColor = DynamicColors.getPrimaryColor(context)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
+            setBackgroundColor(primaryColor)
+            setTextColor(resources.getColor(color.white))
         }
     }
 }
