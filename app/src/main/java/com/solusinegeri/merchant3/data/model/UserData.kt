@@ -27,6 +27,7 @@ data class UpdateUserModel(
     var lang: String = "",
     var name: String = "",
     var phone: String = "",
+    var email: String = "",
     var gender: String = "",
     var village: String = "",
     var address: String = "",

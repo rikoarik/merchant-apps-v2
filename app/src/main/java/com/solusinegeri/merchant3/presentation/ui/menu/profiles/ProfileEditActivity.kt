@@ -182,8 +182,6 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
     }
 
     private fun setupRecyclerItems(){
-        val userData = SecureStorage.getUserData(this.baseContext)
-
         val items = listOf(
             ProfileEditItem(
                 id       = USER_MAP_NAME,
@@ -201,13 +199,13 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                 id       = USER_MAP_EMAIL,
                 title    = getString(string.profile_edit_email_item),
                 content  = viewModel.userData.value?.email ?: getString(string.placeholder_email),
-                editable = true
+                editable = false
             ),
             ProfileEditItem(
                 id       = USER_MAP_PHONE,
                 title    = getString(string.profile_edit_phone_item),
                 content  = viewModel.userData.value?.phone ?: getString(string.placeholder_phone),
-                editable = false
+                editable = true
             ),
             ProfileEditItem(
                 id       = USER_MAP_ADDR,
@@ -222,7 +220,6 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                 editable = true
             )
         )
-
         itemAdapter.clearRecyclerItems()
         itemAdapter.addRecyclerItems(items)
     }

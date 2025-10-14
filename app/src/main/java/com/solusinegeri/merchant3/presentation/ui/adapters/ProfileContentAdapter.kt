@@ -2,7 +2,6 @@ package com.solusinegeri.merchant3.presentation.ui.adapters
 
 import android.R.color
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -11,7 +10,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.model.UpdateUserModel
-import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
 import kotlin.String
 
@@ -113,6 +111,7 @@ class ProfileContentAdapter (
             lang = "id",
             name = items["user_name"]?.trim() ?: "",
             phone = items["user_phone"]?.trim() ?: "",
+            email = items["user_email"]?.trim() ?: "",
             gender = "",
             village = "",
             address = items["user_address"]?.trim() ?: "",
