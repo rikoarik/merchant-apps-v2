@@ -132,7 +132,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         binding.btnEditProfile.backgroundTintList = ColorStateList.valueOf(primaryColor)
 
         // Update profile placeholder icon
-        binding.ADDIMAGE.setColorFilter(primaryColor)
+        binding.imgProfile.setColorFilter(primaryColor)
 
         // Update recyclerview text fields
         itemAdapter.setBoxSpotColor(primaryColor)
@@ -165,6 +165,16 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
     private fun loadUser(){
         viewModel.loadProfileData()
+    }
+
+    private fun updateImageView(url : String){
+        if(!url.isEmpty()){
+            binding.imgProfile.setColorFilter(null)
+            Glide.with(this)
+                .load(url)
+                .skipMemoryCache(true)
+                .into(binding.imgProfile)
+        }
     }
 
 

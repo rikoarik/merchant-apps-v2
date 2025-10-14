@@ -25,13 +25,23 @@
             android:orientation  ="vertical"
             android:gravity      ="center">
 
-            <ImageView
-                android:id="@+id/ADD_IMAGE"
+            <androidx.cardview.widget.CardView
+                android:layout_width="@dimen/_200sdp"
                 android:layout_height="@dimen/_200sdp"
-                android:layout_width ="@dimen/_200sdp"
-                android:scaleType    ="centerCrop"
-                android:src          ="@drawable/ic_profile_placeholder"
-                tools:ignore="ContentDescription" />
+                android:layout_marginTop="@dimen/_12sdp"
+                app:cardCornerRadius="@dimen/_100sdp"
+                app:cardElevation="@dimen/_2sdp"
+                app:cardBackgroundColor="@color/white_dynamic">
+
+                <ImageView
+                    android:id="@+id/img_profile"
+                    android:layout_width="@dimen/_200sdp"
+                    android:layout_height="@dimen/_200sdp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile_placeholder"
+                    tools:ignore="ContentDescription" />
+
+            </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_profile_edit"

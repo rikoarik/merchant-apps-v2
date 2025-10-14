@@ -15,7 +15,9 @@ import com.solusinegeri.merchant3.data.repository.ProfileRepository
  * Contoh implementasi ViewModel dengan UiState pattern
  * Bisa digunakan sebagai template untuk ViewModel lainnya
  */
-class ProfileViewModel(private var repository: ProfileRepository) : BaseViewModel() {
+class ProfileViewModel constructor(
+    private var repository: ProfileRepository
+) : BaseViewModel() {
     // Data LiveData
     private val _userData: MutableLiveData<UserData>  = MutableLiveData<UserData>()
     val userData: LiveData<UserData> = _userData
