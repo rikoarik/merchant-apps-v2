@@ -6,3 +6,10 @@ data class ProfileMenuItem(
     val iconRes: Int,
     val onClick: () -> Unit
 )
+
+data class ProfileEditItem(
+    val id      : String,
+    val title   : String,
+    var content : String,
+    val editable: Boolean
+)

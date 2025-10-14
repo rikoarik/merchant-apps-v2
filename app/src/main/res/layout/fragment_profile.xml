@@ -127,6 +127,18 @@
                         app:strokeColor="@color/white_dynamic"
                         app:cornerRadius="@dimen/_18sdp" />
 
+<!--                    <com.google.android.material.button.MaterialButton-->
+<!--                        android:id="@+id/btn_ganti_pin"-->
+<!--                        style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="@dimen/_36sdp"-->
+<!--                        android:text="Edit"-->
+<!--                        android:visibility="gone"-->
+<!--                        android:textSize="@dimen/text_size_medium"-->
+<!--                        android:textColor="@color/white_dynamic"-->
+<!--                        app:strokeColor="@color/white_dynamic"-->
+<!--                        app:cornerRadius="@dimen/_18sdp" />-->
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>

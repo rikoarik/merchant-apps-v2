@@ -1,5 +1,6 @@
 package com.solusinegeri.merchant3.presentation.ui.main.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,8 +19,12 @@ import com.solusinegeri.merchant3.core.utils.UIThemeUpdater
 import com.solusinegeri.merchant3.data.model.ProfileMenuItem
 import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
+import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
+import com.solusinegeri.merchant3.presentation.ui.menu.menupin.PinMenuActivity
 import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.profiles.PasswordEditActivity
+import com.solusinegeri.merchant3.presentation.ui.menu.profiles.ProfileEditActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.OperationUiState
@@ -33,7 +38,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     private lateinit var menuAdapter: ProfileMenuAdapter
     private lateinit var authRepository: AuthRepository
     
-    override val viewModel: ProfileViewModel by lazy { ProfileViewModel() }
+    override val viewModel: ProfileViewModel by lazy {
+        ProfileViewModel(
+            ProfileRepository(
+                requireContext()
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +60,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     
     override fun setupUI() {
         super.setupUI()
+
         initializeAuthRepository()
         setupRecyclerView()
         setupMenuItems()
@@ -97,8 +109,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
         binding.btnEditProfile.setOnClickListener {
             handleEditProfile()
         }
+
+//        binding.btnGantiPin.setOnClickListener {
+//            handleChangePin()
+//        }
     }
-    
+
     private fun handleLogout() {
         try {
             authRepository.logout()
@@ -244,15 +260,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
     
     private fun handleEditProfile() {
-        Toast.makeText(requireContext(), "Edit Profil - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, ProfileEditActivity::class.java)
+        startActivity(intent)
     }
     
     private fun handleChangePin() {
-        Toast.makeText(requireContext(), "Ubah PIN - Coming Soon", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(requireContext(), "Ubah PIN - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, PinMenuActivity::class.java)
+        startActivity(intent)
     }
     
     private fun handleChangePassword() {
-        Toast.makeText(requireContext(), "Ubah Password - Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this.context, PasswordEditActivity::class.java)
+        startActivity(intent)
     }
     
     private fun handleMerchantLocation() {
