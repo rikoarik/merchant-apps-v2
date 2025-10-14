@@ -52,7 +52,7 @@ object ErrorParser {
             
             try {
                 val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
-                return errorResponse.detail.getUserFriendlyMessage()
+                return errorResponse.getUserFriendlyMessage()
             } catch (e: JsonSyntaxException) {
             }
             
@@ -97,7 +97,7 @@ object ErrorParser {
             
             try {
                 val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
-                return errorResponse.detail.getUserFriendlyMessage()
+                return errorResponse.getUserFriendlyMessage()
             } catch (e: JsonSyntaxException) {
             }
             
@@ -123,7 +123,7 @@ object ErrorParser {
             
             try {
                 val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
-                return errorResponse.detail.getUserFriendlyMessage()
+                return errorResponse.getUserFriendlyMessage()
             } catch (e: JsonSyntaxException) {
             }
             

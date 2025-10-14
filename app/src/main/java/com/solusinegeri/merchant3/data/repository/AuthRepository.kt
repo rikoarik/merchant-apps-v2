@@ -1,62 +1,65 @@
 package com.solusinegeri.merchant3.data.repository
 
 import android.content.Context
+import androidx.core.content.edit
+import com.solusinegeri.merchant3.core.auth.TokenProvider
+import com.solusinegeri.merchant3.core.base.BaseRepository
+import com.solusinegeri.merchant3.core.network.ApiError
+import com.solusinegeri.merchant3.core.network.ApiException
 import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.security.SecurityLogger
-import com.solusinegeri.merchant3.core.utils.ErrorParser
+import com.solusinegeri.merchant3.core.utils.ApiErrorHandler
 import com.solusinegeri.merchant3.data.network.NetworkClient
 import com.solusinegeri.merchant3.data.network.TokenManager
 import com.solusinegeri.merchant3.data.requests.LoginRequest
 import com.solusinegeri.merchant3.data.responses.LoginData
 import com.solusinegeri.merchant3.data.responses.LoginResponse
 import com.solusinegeri.merchant3.core.security.TokenManager as SecurityTokenManager
-import androidx.core.content.edit
-import retrofit2.Response
 
 /**
- * Simple authentication repository dengan TokenManager
+ * Enhanced authentication repository dengan auto-refresh token mechanism
+ * 
+ * SECURITY FEATURES:
+ * - Uses TokenProvider for centralized token management
+ * - Automatic token refresh on expiration
+ * - Encrypted credential storage
+ * - Rate limiting for refresh attempts
+ * - Comprehensive security logging
+ * 
  * Menggunakan ApplicationContext untuk menghindari memory leaks
  */
-class AuthRepository(val appContext: Context) {
+class AuthRepository(val appContext: Context) : BaseRepository() {
+    
+    private val tokenProvider = TokenProvider(appContext)
 
     
     suspend fun login(companyId: String, username: String, password: String): Result<LoginResponse> {
-        return try {
-            val request = LoginRequest(companyId, username, password)
-            val response = NetworkClient.authService.login(request)
+        SecurityLogger.logSecurityEvent(appContext, "AuthRepository", "Login attempt for user: $username")
 
-            if (response.isSuccessful) {
-                val loginResponse = response.body()
-                if (loginResponse != null) {
-                    loginResponse.data?.authToken?.let { token ->
-                        SecureStorage.saveAuthToken(appContext, token)
-                        SecurityTokenManager.saveTokens(
-                            accessToken = token,
-                            refreshToken = loginResponse.data.authToken,
-                            expiresIn = 3600
+        val request = LoginRequest(companyId, username, password)
+
+        return request(appContext) { NetworkClient.authService.login(request) }
+            .mapCatching { loginResponse ->
+                val loginData = loginResponse.data
+                    ?: throw ApiException(
+                        ApiError(
+                            message = "Data login tidak ditemukan pada response.",
+                            type = loginResponse.type
                         )
-                    }
-                    
-                    loginResponse.data?.let { loginData ->
-                        saveUserDataSecurely(loginData)
-                    }
-                    
-                    saveLoginCredentials(companyId, username, password)
-                    
-                    Result.success(loginResponse)
-                } else {
-                    Result.failure(Exception("Empty response"))
-                }
-            } else {
-                val errorMessage = ErrorParser.parseLoginError(
-                    response.errorBody()?.string() ?: "",
-                    response.code()
-                )
-                Result.failure(Exception(errorMessage))
+                    )
+
+                val token = loginData.authToken
+                    ?: throw ApiException(
+                        ApiError(
+                            message = "Token autentikasi tidak tersedia pada response login.",
+                            type = loginResponse.type
+                        )
+                    )
+
+                persistLoginResult(token, loginData, companyId, username, password)
+
+                loginResponse
             }
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
     }
     
     fun isLoggedIn(): Boolean {
@@ -71,30 +74,43 @@ class AuthRepository(val appContext: Context) {
      * Refresh token jika diperlukan - menggunakan login endpoint yang sama
      */
     suspend fun refreshTokenIfNeeded(): Result<Boolean> {
-        return try {
-            if (SecurityTokenManager.isTokenExpiredOrNeedsRefresh()) {
-                val (companyId, username, password) = getLoginCredentials()
-                
-                if (!companyId.isNullOrBlank() && !username.isNullOrBlank() && !password.isNullOrBlank()) {
-                    val loginResult = login(companyId, username, password)
-                    
-                    loginResult.fold(
-                        onSuccess = { loginResponse ->
-                            Result.success(true)
-                        },
-                        onFailure = { error ->
-                            Result.failure(Exception("Refresh token failed: ${error.message}"))
-                        }
-                    )
-                } else {
-                    Result.failure(Exception("Login credentials not found for refresh"))
-                }
-            } else {
-                Result.success(false)
-            }
-        } catch (e: Exception) {
-            Result.failure(e)
+        if (tokenProvider.isTokenValid() && !tokenProvider.needsRefresh()) {
+            return Result.success(false)
         }
+
+        val (companyId, username, password) = tokenProvider.getStoredCredentials()
+        if (companyId.isNullOrBlank() || username.isNullOrBlank() || password.isNullOrBlank()) {
+            return Result.failure(
+                ApiException(
+                    ApiError(
+                        message = "Login credentials not found for refresh",
+                        requiresLogout = true
+                    )
+                )
+            )
+        }
+
+        val loginResult = login(companyId, username, password)
+
+        return loginResult.fold(
+            onSuccess = {
+                Result.success(true)
+            },
+            onFailure = { throwable ->
+                val apiError = when (throwable) {
+                    is ApiException -> throwable.error
+                    else -> ApiErrorHandler.resolve(throwable, appContext)
+                }
+                Result.failure(
+                    ApiException(
+                        apiError.copy(
+                            message = "Refresh token gagal: ${apiError.message}",
+                            requiresLogout = apiError.requiresLogout || apiError.statusCode in listOf(401, 403)
+                        )
+                    )
+                )
+            }
+        )
     }
     
     /**
@@ -124,10 +140,21 @@ class AuthRepository(val appContext: Context) {
         SecureStorage.clearLoginCredentials(appContext)
     }
     
-    /**
-     * Save additional user data after login dengan secure storage
-     */
-    private fun saveUserDataSecurely(loginData: LoginData) {
+    private fun persistLoginResult(
+        token: String,
+        loginData: LoginData,
+        companyId: String,
+        username: String,
+        password: String
+    ) {
+        tokenProvider.saveToken(token)
+        SecureStorage.saveAuthToken(appContext, token)
+        SecurityTokenManager.saveTokens(
+            accessToken = token,
+            refreshToken = token,
+            expiresIn = 3600
+        )
+
         SecureStorage.saveUserData(
             appContext,
             loginData.userId ?: "",
@@ -135,8 +162,9 @@ class AuthRepository(val appContext: Context) {
             loginData.name ?: "",
             loginData.email ?: ""
         )
-        
+
         saveUserData(loginData)
+        saveLoginCredentials(companyId, username, password)
     }
     
     /**

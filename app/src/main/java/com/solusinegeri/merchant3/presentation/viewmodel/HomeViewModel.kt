@@ -3,6 +3,7 @@ package com.solusinegeri.merchant3.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.core.base.BaseViewModel
+import com.solusinegeri.merchant3.core.utils.toUserMessage
 import com.solusinegeri.merchant3.data.repository.BalanceRepository
 import com.solusinegeri.merchant3.data.repository.MenuRepository
 import com.solusinegeri.merchant3.data.repository.NewsInfoRepository
@@ -34,31 +35,33 @@ class HomeViewModel : BaseViewModel() {
 
     fun loadMenuData() {
         _menuUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             menuRepository.getActiveMenus()
                 .onSuccess { activeMenus ->
                     _menuList.value = activeMenus
                     _menuUiState.value = DataUiState.Success(activeMenus, "Menu berhasil dimuat")
                 }
                 .onFailure { error ->
-                    _menuUiState.value = DataUiState.Error(error.message ?: "Gagal memuat menu")
-                    setError(error.message ?: "Gagal memuat menu")
+                    val message = error.toUserMessage()
+                    _menuUiState.value = DataUiState.Error(message)
+                    setError(message)
                 }
         }
     }
 
     fun loadBalanceData(balanceCode: String) {
         _balanceUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             balanceRepository.getBalance(balanceCode)
                 .onSuccess { balanceData ->
                     _balanceData.value = balanceData
                     _balanceUiState.value = DataUiState.Success(balanceData, "Balance berhasil dimuat")
                 }
                 .onFailure { error ->
-                    _balanceUiState.value = DataUiState.Error(error.message ?: "Gagal memuat balance")
+                    val message = error.toUserMessage()
+                    _balanceUiState.value = DataUiState.Error(message)
                     _balanceData.value = null
-                    setError(error.message ?: "Gagal memuat balance")
+                    setError(message)
                 }
         }
     }
@@ -70,7 +73,7 @@ class HomeViewModel : BaseViewModel() {
         dir: Int? = null
     ) {
         _newsUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             newsRepository.getNewsList(
                 page = page,
                 size = size,
@@ -79,8 +82,9 @@ class HomeViewModel : BaseViewModel() {
             ).onSuccess { newsResponse ->
                 _newsUiState.value = DataUiState.Success(newsResponse, "Berita berhasil dimuat")
             }.onFailure { error ->
-                _newsUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
-                setError(error.message ?: "Gagal memuat berita")
+                val message = error.toUserMessage()
+                _newsUiState.value = DataUiState.Error(message)
+                setError(message)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.solusinegeri.merchant3.presentation.ui.initial
 import android.content.Context
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.utils.DynamicColors
+import com.solusinegeri.merchant3.core.utils.toUserMessage
 import com.solusinegeri.merchant3.data.repository.CompanyRepository
 import com.solusinegeri.merchant3.data.network.NetworkClient
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,14 +30,14 @@ class InitialInputViewModel : BaseViewModel() {
     private val companyRepository = CompanyRepository(NetworkClient.authService)
     
     fun checkInstansi(context: Context, instansiCode: String) {
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             try {
                 _instansiResult.value = InstansiResult.Loading
                 
                 val validationResult = validateInput(instansiCode)
                 if (!validationResult.isValid) {
                     _instansiResult.value = InstansiResult.Error(validationResult.errorMessage ?: "Validation error")
-                    return@launchCoroutine
+                    return@launchIO
                 }
                 
                 val result = companyRepository.validateCompanyInitial(instansiCode)
@@ -56,22 +57,22 @@ class InitialInputViewModel : BaseViewModel() {
                     },
                     onFailure = { error ->
                         val errorMessage = when {
-                            error.message?.contains("tidak ditemukan", ignoreCase = true) == true -> {
+                            error.toUserMessage().contains("tidak ditemukan", ignoreCase = true) -> {
                                 "Kode instansi tidak ditemukan. Silakan periksa kembali kode yang Anda masukkan."
                             }
-                            error.message?.contains("tidak valid", ignoreCase = true) == true -> {
+                            error.toUserMessage().contains("tidak valid", ignoreCase = true) -> {
                                 "Format kode instansi tidak valid. Silakan masukkan kode yang benar."
                             }
-                            error.message?.contains("akses", ignoreCase = true) == true -> {
+                            error.toUserMessage().contains("akses", ignoreCase = true) -> {
                                 "Anda tidak memiliki akses untuk mengakses data ini."
                             }
-                            error.message?.contains("server", ignoreCase = true) == true -> {
+                            error.toUserMessage().contains("server", ignoreCase = true) -> {
                                 "Terjadi kesalahan pada server. Silakan coba lagi nanti."
                             }
-                            error.message?.contains("jaringan", ignoreCase = true) == true -> {
+                            error.toUserMessage().contains("jaringan", ignoreCase = true) -> {
                                 "Terjadi kesalahan jaringan. Periksa koneksi internet Anda."
                             }
-                            else -> error.message ?: "Gagal mengambil data company"
+                            else -> error.toUserMessage()
                         }
                         
                         _instansiResult.value = InstansiResult.Error(errorMessage)
@@ -79,8 +80,7 @@ class InitialInputViewModel : BaseViewModel() {
                 )
                 
             } catch (e: Exception) {
-                val errorMessage = handleException(e)
-                _instansiResult.value = InstansiResult.Error(errorMessage)
+                _instansiResult.value = InstansiResult.Error(handleException(e))
             }
         }
     }
@@ -103,7 +103,7 @@ class InitialInputViewModel : BaseViewModel() {
                     else -> "Terjadi kesalahan server: ${exception.message()}"
                 }
             }
-            else -> "Terjadi kesalahan yang tidak diketahui: ${exception.message}"
+            else -> "Terjadi kesalahan yang tidak diketahui: ${exception.toUserMessage()}"
         }
     }
     

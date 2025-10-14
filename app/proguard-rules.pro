@@ -30,6 +30,9 @@
 -keep class androidx.compose.** { *; }
 -keep class kotlin.Metadata { *; }
 
+# Keep AAChartCore-Kotlin
+-keep class com.github.aachartmodel.aainfographics.** { *; }
+
 # Keep Security classes
 -keep class com.solusinegeri.merchant3.core.security.** { *; }
 

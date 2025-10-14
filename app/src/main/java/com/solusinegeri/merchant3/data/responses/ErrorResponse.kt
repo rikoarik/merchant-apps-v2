@@ -5,10 +5,11 @@ import com.google.gson.annotations.SerializedName
 /**
  * Data model untuk error response dari backend
  * Format: {"detail":{"type":"COMPANY_NOT_FOUND","message":"Company not found","status_code":404,"error":"NOT_FOUND"}}
+ * atau format sederhana: {"detail":"Not authenticated"}
  */
 data class ErrorResponse(
     @SerializedName("detail")
-    val detail: ErrorDetail
+    val detail: Any // Bisa ErrorDetail atau String
 )
 
 data class ErrorDetail(
@@ -58,6 +59,36 @@ fun ValidationErrorResponse.getUserFriendlyMessage(): String {
 }
 
 /**
+ * Extension function untuk mendapatkan user-friendly error message dari ErrorResponse
+ * Mendukung format: {"detail":"Not authenticated"} dan {"detail":{...}}
+ */
+fun ErrorResponse.getUserFriendlyMessage(): String {
+    return when (detail) {
+        is String -> {
+            // Format sederhana: {"detail":"Not authenticated"}
+            getUserFriendlyMessageFromString(detail)
+        }
+        is Map<*, *> -> {
+            // Format kompleks: {"detail":{"type":"...","message":"..."}}
+            try {
+                val errorDetail = ErrorDetail(
+                    type = detail["type"] as? String ?: "",
+                    message = detail["message"] as? String ?: "",
+                    statusCode = (detail["status_code"] as? Number)?.toInt() ?: 0,
+                    error = detail["error"] as? String ?: ""
+                )
+                errorDetail.getUserFriendlyMessage()
+            } catch (e: Exception) {
+                getUserFriendlyMessageFromString(detail.toString())
+            }
+        }
+        else -> {
+            getUserFriendlyMessageFromString(detail.toString())
+        }
+    }
+}
+
+/**
  * Extension function untuk mendapatkan user-friendly error message
  * Priority: message -> error -> type
  */
@@ -79,6 +110,8 @@ fun ErrorDetail.getUserFriendlyMessage(): String {
         "VALIDATION_ERROR" -> "Data yang dimasukkan tidak valid. Silakan periksa kembali."
         "TIMEOUT" -> "Permintaan timeout. Silakan coba lagi."
         "RATE_LIMIT_EXCEEDED" -> "Terlalu banyak permintaan. Silakan tunggu sebentar."
+        "ACCESS_FORBIDDEN" -> "Akses ditolak. Silakan login ulang."
+        "NOT_AUTHENTICATED" -> "Anda belum login. Silakan login terlebih dahulu."
         else -> type.ifEmpty { "Terjadi kesalahan yang tidak diketahui" }
     }
 }
@@ -98,5 +131,31 @@ fun ErrorDetail.getErrorTypeDescription(): String {
         "TIMEOUT" -> "Timeout"
         "RATE_LIMIT_EXCEEDED" -> "Terlalu Banyak Permintaan"
         else -> "Kesalahan Tidak Diketahui"
+    }
+}
+
+/**
+ * Helper function untuk mendapatkan user-friendly message dari string error
+ */
+private fun getUserFriendlyMessageFromString(errorString: String): String {
+    return when {
+        errorString.contains("Not authenticated", ignoreCase = true) -> 
+            "Anda belum login. Silakan login terlebih dahulu."
+        errorString.contains("ACCESS_FORBIDDEN", ignoreCase = true) -> 
+            "Akses ditolak. Silakan login ulang."
+        errorString.contains("Unauthorized", ignoreCase = true) -> 
+            "Username atau password salah. Silakan coba lagi."
+        errorString.contains("Forbidden", ignoreCase = true) -> 
+            "Akses ditolak. Silakan hubungi administrator."
+        errorString.contains("Not found", ignoreCase = true) -> 
+            "Data tidak ditemukan. Silakan periksa kembali."
+        errorString.contains("Invalid", ignoreCase = true) -> 
+            "Data yang dimasukkan tidak valid. Silakan periksa kembali."
+        errorString.contains("Timeout", ignoreCase = true) -> 
+            "Permintaan timeout. Silakan coba lagi."
+        errorString.contains("Server error", ignoreCase = true) -> 
+            "Terjadi kesalahan pada server. Silakan coba lagi nanti."
+        errorString.isNotEmpty() -> errorString
+        else -> "Terjadi kesalahan yang tidak diketahui"
     }
 }

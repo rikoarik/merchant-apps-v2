@@ -1,5 +1,8 @@
 package com.solusinegeri.merchant3.data.repository
 
+import com.solusinegeri.merchant3.core.base.BaseRepository
+import com.solusinegeri.merchant3.core.network.ApiError
+import com.solusinegeri.merchant3.core.network.ApiException
 import com.solusinegeri.merchant3.data.network.NetworkClient
 import com.solusinegeri.merchant3.data.network.NewsApi
 import com.solusinegeri.merchant3.data.responses.NewsDetailResponse
@@ -7,7 +10,7 @@ import com.solusinegeri.merchant3.data.responses.NewsListResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class NewsInfoRepository {
+class NewsInfoRepository : BaseRepository() {
 
     private val newsApi: NewsApi by lazy {
         NetworkClient.createService(NewsApi::class.java)
@@ -26,44 +29,21 @@ class NewsInfoRepository {
         sortBy: String? = null,
         dir: Int? = null
     ): Result<NewsListResponse> = withContext(Dispatchers.IO) {
-        try {
-            val response = newsApi.getMerchantNews(
+        request {
+            newsApi.getMerchantNews(
                 page = page,
                 size = size,
                 sortBy = sortBy,
                 dir = dir
             )
-
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    Result.success(body)
-                } else {
-                    Result.failure(Exception("Data berita tidak ditemukan"))
-                }
-            } else {
-                Result.failure(Exception("Gagal memuat berita: ${response.code()} ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Error memuat berita: ${e.message}"))
+        }.mapCatching { response ->
+            response.takeIf { it.data != null }
+                ?: throw ApiException(ApiError(message = "Data berita tidak ditemukan"))
+            response
         }
     }
 
     suspend fun getNewsDetail(id: String): Result<NewsDetailResponse> = withContext(Dispatchers.IO) {
-        try {
-            val response = newsApi.getInfoMerchantById(id)
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null) {
-                    Result.success(body)
-                } else {
-                    Result.failure(Exception("Data berita tidak ditemukan"))
-                }
-            } else {
-                Result.failure(Exception("Gagal memuat berita: ${response.code()} ${response.message()}"))
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Error memuat berita: ${e.message}"))
-        }
+        request { newsApi.getInfoMerchantById(id) }
     }
 }

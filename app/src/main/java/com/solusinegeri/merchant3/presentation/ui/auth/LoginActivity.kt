@@ -10,6 +10,7 @@ import com.solusinegeri.merchant3.presentation.ui.main.MainActivity
 import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.config.BuildConfig
 import com.solusinegeri.merchant3.core.base.BaseActivity
+import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.security.InputValidator
 import com.solusinegeri.merchant3.core.security.SecurityLogger
 import com.solusinegeri.merchant3.core.security.SecureStorage
@@ -229,31 +230,28 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
     override fun observeViewModel() {
         super.observeViewModel()
 
-        viewModel.uiState.observe(this) { state ->
+        viewModel.legacyUiState.observe(this) { state ->
             when (state) {
-                is UiState.Loading -> {
+                BaseViewModel.UiState.Loading -> {
                     binding.btnLogin.setLoading(true)
                     updateButtonColors(false)
                 }
-                is UiState.Success -> {
+                is BaseViewModel.UiState.Success -> {
                     binding.btnLogin.setSuccess(state.message)
-                    showSuccess(state.message.toString())
+                    showSuccess(state.message ?: "")
                     SecurityLogger.logLoginAttempt(this, "", companyId, true)
                     SecureStorage.resetFailedLoginAttempts(this)
-
                     navigateToMain()
                 }
-                is UiState.Error -> {
+                is BaseViewModel.UiState.Error -> {
                     binding.btnLogin.setError(state.message)
                     val errorMessage = mapLoginError(state.message)
                     showError(errorMessage)
-
                     SecurityLogger.logLoginAttempt(this, "", companyId, false, errorMessage)
                     SecureStorage.recordFailedLoginAttempt(this)
-
                     updateLoginButtonState()
                 }
-                is UiState.Idle -> {
+                BaseViewModel.UiState.Idle -> {
                     binding.btnLogin.reset()
                     updateLoginButtonState()
                 }

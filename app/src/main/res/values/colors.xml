@@ -6,7 +6,7 @@
     <!-- Primary Colors -->
     <color name="primary_color">#01CD97</color>
     <color name="primary_dark">#00A075</color>
-    <color name="primary_light">#FFBBDEFB</color>
+    <color name="primary_light">#E8F5E8</color>
     
     <!-- Green Primary Colors -->
     <color name="colorPrimaryGreen">#01CD97</color>
@@ -47,6 +47,23 @@
     <color name="bottom_nav_unselected">@color/text_secondary</color>
     <color name="gray_200">@color/text_hint</color>
     <color name="gray_600">@color/text_secondary</color>
+    
+    <!-- Date Filter Colors -->
+    <color name="card_stroke">#FFE0E0E0</color>
+    <color name="chip_selected_background">@color/primary_color</color>
+    <color name="chip_unselected_background">@color/white</color>
+    <color name="chip_selected_text">@color/white</color>
+    <color name="chip_unselected_text">@color/text_primary</color>
+    
+    <!-- Error State Colors -->
+    <color name="error_light">#FFFFEBEE</color>
+    <color name="debug_background">#FFF5F5F5</color>
+    <color name="debug_border">#FFE0E0E0</color>
+    
+    <!-- Modern Chart Colors -->
+    <color name="chart_card_bg">#FFF8F9FA</color>
+    <color name="pill_bg_primary">#E8F5E8</color>
+    <color name="pill_bg_accent">#FFF3E0</color>
     
     <!-- Bottom Navigation Item Color State List -->
     <color name="bottom_nav_item_color">@color/bottom_nav_item_color_selector</color>
@@ -140,4 +157,16 @@
     <color name="color_bg_gray">#FFEEEEEE</color>
     <color name="color_blue_2">#FF1976D2</color>
     <color name="color_bg">#FFF5F5F5</color>
+    
+    <!-- Analytics Colors -->
+    <color name="success_color">#FF4CAF50</color>
+    <color name="success_light">#FFE8F5E8</color>
+    <color name="error_color">#FFF44336</color>
+    
+    <!-- Transaction Type Icons -->
+    <color name="ic_transfer">#FF2196F3</color>
+    <color name="ic_topup">#FF4CAF50</color>
+    <color name="ic_withdraw">#FFFF9800</color>
+    <color name="ic_payment">#FF9C27B0</color>
+    <color name="ic_deposit">#FF00BCD4</color>
 </resources>

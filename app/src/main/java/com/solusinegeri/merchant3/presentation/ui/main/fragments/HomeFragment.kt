@@ -198,21 +198,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         viewModel.loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
     }
 
-    private fun refreshMenuDataSilent() {
-        viewModel.refreshData(balanceCode)
-    }
+    override fun onDestroyView() {
+        super.onDestroyView()
 
-    override fun onResume() {
-        super.onResume()
-        refreshMenuDataSilent()
-    }
-
-    fun refreshData() {
-        refreshMenuData()
-    }
-
-    fun refreshDataSilent() {
-        refreshMenuDataSilent()
     }
 
     private fun updateUIWithDynamicColors() {

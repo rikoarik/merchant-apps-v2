@@ -155,7 +155,7 @@ fun BottomNavigationCompose(
             onClick = onFabClick,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 30.dp)
+                .padding(bottom = 24.dp)
                 .size(64.dp)
                 .scale(fabScale),
             containerColor = primaryColor,

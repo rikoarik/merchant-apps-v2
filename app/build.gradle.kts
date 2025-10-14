@@ -141,6 +141,12 @@ dependencies {
     //noinspection GradleDependency
     implementation(libs.androidx.navigation.compose)
     
+    // AAChartCore-Kotlin - Modern Chart Library
+    implementation("com.github.AAChartModel:AAChartCore-Kotlin:7.5.0")
+    
+    // Date Picker
+    implementation(libs.material.v1110)
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

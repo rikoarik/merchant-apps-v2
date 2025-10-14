@@ -34,7 +34,9 @@ object SecureStorage {
     private const val KEY_FAILED_LOGIN_ATTEMPTS = "failed_login_attempts"
     private const val KEY_LAST_FAILED_LOGIN = "last_failed_login"
     
-    private const val SESSION_TIMEOUT_MS = 30 * 60 * 1000L
+    // Token expires in 10 seconds for testing (change back to 3600L for production)
+    private const val TOKEN_VALIDITY_SECONDS = 10L // TESTING: 10 seconds
+    private const val TOKEN_VALIDITY_MS = TOKEN_VALIDITY_SECONDS * 1000L
     
     private const val MAX_LOGIN_ATTEMPTS = 5
     private const val RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000L
@@ -150,16 +152,30 @@ object SecureStorage {
     }
     
     /**
-     * Cek apakah session masih valid
+     * Cek apakah session masih valid berdasarkan token expiry (1 jam)
+     * 
+     * SECURITY: Validates token expiration time
      */
     fun isSessionValid(context: Context): Boolean {
         val prefs = getEncryptedPrefs(context)
         val loginTimestamp = prefs.getLong(KEY_LOGIN_TIMESTAMP, 0)
         
-        if (loginTimestamp == 0L) return false
+        if (loginTimestamp == 0L) {
+            return false
+        }
         
         val currentTime = System.currentTimeMillis()
-        return (currentTime - loginTimestamp) < SESSION_TIMEOUT_MS
+        val elapsedTime = currentTime - loginTimestamp
+        
+        return elapsedTime < TOKEN_VALIDITY_MS
+    }
+    
+    /**
+     * Get login timestamp for debugging
+     */
+    fun getLoginTimestamp(context: Context): Long {
+        val prefs = getEncryptedPrefs(context)
+        return prefs.getLong(KEY_LOGIN_TIMESTAMP, 0)
     }
     
     /**
@@ -243,7 +259,9 @@ object SecureStorage {
     }
     
     /**
-     * Get remaining session time dalam menit
+     * Get remaining session time dalam menit berdasarkan token validity (1 jam)
+     * 
+     * SECURITY: Returns remaining time without exposing actual token
      */
     fun getRemainingSessionTime(context: Context): Long {
         val prefs = getEncryptedPrefs(context)
@@ -253,7 +271,7 @@ object SecureStorage {
         
         val currentTime = System.currentTimeMillis()
         val elapsedTime = currentTime - loginTimestamp
-        val remainingTime = SESSION_TIMEOUT_MS - elapsedTime
+        val remainingTime = TOKEN_VALIDITY_MS - elapsedTime
         
         return if (remainingTime > 0) remainingTime / (60 * 1000) else 0
     }

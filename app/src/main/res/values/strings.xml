@@ -156,6 +156,13 @@
     <!-- Format teks dinamis -->
     <string name="by_name_format">Oleh: %1$s</string>
 
+    <!-- Bottom Navigation Titles -->
+    <string name="title_home">Beranda</string>
+    <string name="title_news">Berita</string>
+    <string name="title_analytics">Analitik</string>
+    <string name="title_profile">Profil</string>
+
+
     <!-- Konten -->
     <string name="news_image">Gambar Berita</string>
     <string name="lorem_ipsum">

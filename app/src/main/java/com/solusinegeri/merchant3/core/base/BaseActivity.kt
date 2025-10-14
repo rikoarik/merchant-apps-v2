@@ -11,12 +11,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.base.BaseViewModel.UiEvent
+import com.solusinegeri.merchant3.core.base.BaseViewModel.UiState
 import com.solusinegeri.merchant3.core.utils.AutoFontApplier
 import com.solusinegeri.merchant3.presentation.component.loading.LoadingPage
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
@@ -48,19 +53,28 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
     protected open fun setupClickListeners() {}
 
     open fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.isLoading.collect { isLoading -> showLoading(isLoading) }
+        collectFlow(viewModel.uiState) { state ->
+            when (state) {
+                UiState.Loading -> showLoading(true)
+                UiState.Idle -> showLoading(false)
+                is UiState.Error -> Unit // handled via errorMessage flow
+                is UiState.Success -> Unit // handled via successMessage flow
+            }
+            onUiStateChanged(state)
         }
-        lifecycleScope.launch {
-            viewModel.errorMessage.collect { msg ->
-                msg?.let { showError(it); viewModel.clearError() }
+        collectFlow(viewModel.errorMessage) { msg ->
+            if (msg != null) {
+                showError(msg)
+                viewModel.clearError()
             }
         }
-        lifecycleScope.launch {
-            viewModel.successMessage.collect { msg ->
-                msg?.let { showSuccess(it); viewModel.clearSuccess() }
+        collectFlow(viewModel.successMessage) { msg ->
+            if (msg != null) {
+                showSuccess(msg)
+                viewModel.clearSuccess()
             }
         }
+        collectFlow(viewModel.events) { handleEvent(it) }
     }
 
     fun showLoading(show: Boolean) {
@@ -187,5 +201,26 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
     protected fun makeSystemBarsTransparent() {
         makeStatusBarTransparent()
         makeNavigationBarTransparent()
+    }
+
+    protected open fun onUiStateChanged(state: UiState) = Unit
+
+    protected open fun handleEvent(event: UiEvent) {
+        when (event) {
+            is UiEvent.ShowSnackbar -> showSuccess(event.message)
+            else -> Unit
+        }
+    }
+
+    protected fun <T> collectFlow(
+        flow: Flow<T>,
+        minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+        collector: suspend (T) -> Unit
+    ) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(minActiveState) {
+                flow.collect(collector)
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.solusinegeri.merchant3.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.core.base.BaseViewModel
+import com.solusinegeri.merchant3.core.utils.toUserMessage
 import com.solusinegeri.merchant3.data.model.UserData
 
 /**
@@ -24,7 +25,7 @@ class ProfileViewModel : BaseViewModel() {
     
     fun loadProfileData() {
         _profileUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             // Simulasi API call
             try {
                 // Repository call here
@@ -38,15 +39,16 @@ class ProfileViewModel : BaseViewModel() {
                 //     setError(error.message ?: "Gagal memuat profile")
                 // }
             } catch (e: Exception) {
-                _profileUiState.value = DataUiState.Error("Error: ${e.message}")
-                setError("Error: ${e.message}")
+                val message = "Error: ${e.toUserMessage()}"
+                _profileUiState.value = DataUiState.Error(message)
+                setError(message)
             }
         }
     }
     
     fun updateProfile(userData: UserData) {
         _updateProfileUiState.value = OperationUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             try {
                 // Repository call here
                 // val result = profileRepository.updateProfile(userData)
@@ -59,8 +61,9 @@ class ProfileViewModel : BaseViewModel() {
                 //     setError(error.message ?: "Gagal update profile")
                 // }
             } catch (e: Exception) {
-                _updateProfileUiState.value = OperationUiState.Error("Error: ${e.message}")
-                setError("Error: ${e.message}")
+                val message = "Error: ${e.toUserMessage()}"
+                _updateProfileUiState.value = OperationUiState.Error(message)
+                setError(message)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.solusinegeri.merchant3.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.core.base.BaseViewModel
+import com.solusinegeri.merchant3.core.utils.toUserMessage
 import com.solusinegeri.merchant3.data.repository.NewsInfoRepository
 import com.solusinegeri.merchant3.data.responses.NewsDetailResponse
 import com.solusinegeri.merchant3.data.responses.NewsListResponse
@@ -25,7 +26,7 @@ class NewsInfoViewModel : BaseViewModel() {
         dir: Int? = null
     ) {
         _newsUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             newsRepository.getNewsList(
                 page = page,
                 size = size,
@@ -34,21 +35,23 @@ class NewsInfoViewModel : BaseViewModel() {
             ).onSuccess { newsResponse ->
                 _newsUiState.value = DataUiState.Success(newsResponse, "Berita berhasil dimuat")
             }.onFailure { error ->
-                _newsUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
-                setError(error.message ?: "Gagal memuat berita")
+                val message = error.toUserMessage()
+                _newsUiState.value = DataUiState.Error(message)
+                setError(message)
             }
         }
     }
 
     fun loadNewsDetail(id: String) {
         _newsDetailUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
+        launchIO(showLoading = false) {
             newsRepository.getNewsDetail(id)
                 .onSuccess { newsDetailResponse ->
                 _newsDetailUiState.value = DataUiState.Success(newsDetailResponse, "Berita berhasil dimuat")
             }.onFailure { error ->
-                _newsDetailUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
-                setError(error.message ?: "Gagal memuat berita")
+                val message = error.toUserMessage()
+                _newsDetailUiState.value = DataUiState.Error(message)
+                setError(message)
             }
         }
     }

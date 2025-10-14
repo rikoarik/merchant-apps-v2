@@ -12,6 +12,7 @@ import com.solusinegeri.merchant3.core.base.BaseActivity
 import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.databinding.ActivitySplashBinding
 import com.solusinegeri.merchant3.presentation.ui.auth.LoginActivity
+import com.solusinegeri.merchant3.presentation.ui.initial.InitialInputActivity
 import com.solusinegeri.merchant3.presentation.ui.main.MainActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.SplashViewModel
 import com.solusinegeri.merchant3.presentation.viewmodel.SplashNavigationState
@@ -76,6 +77,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
                 is SplashNavigationState.NavigateToLogin -> {
                     navigateToLogin()
                 }
+                is SplashNavigationState.NavigateToInitial -> {
+                    navigateToInitial()
+                }
                 is SplashNavigationState.Idle -> {
                 }
             }
@@ -91,6 +95,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     
     private fun navigateToLogin() {
         val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToInitial() {
+        val intent = Intent(this, InitialInputActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

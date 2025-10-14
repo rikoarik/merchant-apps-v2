@@ -74,6 +74,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                         R.id.homeFragment -> "home"
                         R.id.profileFragment -> "profile"
                         R.id.newsFragment -> "news"
+                        R.id.analyticsFragment -> "analytics"
                         else -> "home"
                     }
                     currentRoute = newRoute
@@ -101,10 +102,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                             }
                         }
                         "analytics" -> {
-                            showSuccess("Analytics clicked")
-//                            if (currentRouteState != "analytics") {
-//                                navController.navigate(R.id.analyticsFragment)
-//                            }
+                            if (currentRouteState != "analytics") {
+                                navController.navigate(R.id.analyticsFragment)
+                            }
                         }
                     }
                 },
@@ -175,7 +175,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                 navigateToNews()
             }
             "analytics" -> {
-//                navigateToNews()
+                navigateToAnalytics()
             }
         }
     }
@@ -192,7 +192,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                 navigateToNews()
             }
             "analytics" -> {
-//                navigateToNews()
+                navigateToAnalytics()
             }
         }
     }
@@ -227,6 +227,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             val navController = navHostFragment.navController
             navController.navigate(R.id.newsFragment)
             currentRoute = "news"
+        }
+    }
+
+    private fun navigateToAnalytics() {
+        if (currentRoute != "analytics") {
+            Log.d("SwipeNavigation", "Navigating to Analytics")
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(binding.navHostFragment.id) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(R.id.analyticsFragment)
+            currentRoute = "analytics"
         }
     }
 
