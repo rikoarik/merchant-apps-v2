@@ -1,23 +1,21 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
 import android.R
-import android.app.AlertDialog
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.core.base.BaseActivity
-import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.PasswordEditModel
-import com.solusinegeri.merchant3.data.repository.PasswordRepository
+import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.ActivityPasswordEditBinding
-import com.solusinegeri.merchant3.presentation.viewmodel.PasswordEditState
-import com.solusinegeri.merchant3.presentation.viewmodel.PasswordViewModel
+import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
+import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
 
-class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, PasswordViewModel>() {
-    override val viewModel: PasswordViewModel by lazy {
-        PasswordViewModel(
-            PasswordRepository(
+class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, ProfileViewModel>() {
+    override val viewModel: ProfileViewModel by lazy {
+        ProfileViewModel(
+            ProfileRepository(
                 this.baseContext
             )
         )
@@ -83,21 +81,21 @@ class PasswordEditActivity : BaseActivity<ActivityPasswordEditBinding, PasswordV
     override fun observeViewModel() {
         super.observeViewModel()
 
-        viewModel.changePasswordState.observe(this){ state ->
+        viewModel.passwordChangeState.observe(this){ state ->
             when(state){
-                is PasswordEditState.Error ->{
+                is DataUiState.Error   -> {
                     binding.btnEditPassword.setError(state.message)
                     binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
                 }
-                is PasswordEditState.Loading -> {
+                is DataUiState.Loading -> {
                     binding.btnEditPassword.backgroundTintList = ColorStateList.valueOf(getColor(R.color.black))
                     binding.btnEditPassword.setLoading(true)
                 }
-                is PasswordEditState.Success -> {
+                is DataUiState.Success -> {
                     binding.btnEditPassword.setSuccess(state.message)
-                    viewModel.showDialogue(this)
+                    viewModel.showDialogue(this, "Berhasil Mengubah Password")
                 }
-                is PasswordEditState.Idle -> {
+                is DataUiState.Idle    -> {
                     binding.btnEditPassword.reset()
                     onBackPressedDispatcher.onBackPressed()
                 }

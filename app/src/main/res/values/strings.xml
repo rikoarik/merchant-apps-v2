@@ -132,6 +132,9 @@
     <string name="placeholder_email">example_email@email.co</string>
     <string name="placeholder_name">Placeholder User</string>
     <string name="placeholder_user_id">0</string>
+    <string name="placeholder_phone">08xx-xxxx-xxxx</string>
+    <string name="placeholder_address">321 Example road</string>
+    <string name="placeholder_b_loc">321 Example road</string>
 
     <!-- Menu Item Placeholders -->
     <string name="placeholder_menu_title">Menu Item</string>
@@ -159,9 +162,16 @@
     <string name="no_content_available">Konten belum tersedia</string>
 
     <!-- Edit Profile Items-->
-    <string name="profile_edit_name_item" >Nama</string>
-    <string name="profile_edit_id_item"   >Nomor ID</string>
-    <string name="profile_edit_email_item">Email</string>
+    <string name="profile_edit_name_item"    >Nama Merchant</string>
+    <string name="profile_edit_id_item"      >Nomor ID</string>
+    <string name="profile_edit_email_item"   >Email</string>
+    <string name="profile_edit_phone_item"   >Telepon</string>
+    <string name="profile_edit_address_item" >Alamat</string>
+    <string name="profile_edit_b_day_item"   >Tempat Lahir</string>
+    <string name="profile_edit_b_loc_item"   >Tanggal Lahir</string>
+    <string name="profile_edit_gender_item"  >Jenis Kelamin</string>
+    <string name="profile_edit_gender_female">Perempuan</string>
+    <string name="profile_edit_gender_male"  >Laki - Laki</string>
 
     <!-- Ganti Pin Menu -->
     <string name="Pin_name">Pin</string>

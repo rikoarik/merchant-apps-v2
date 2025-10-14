@@ -6,7 +6,7 @@ data class PasswordEditModel (
     val confirmPassword: String
 )
 data class StrengthPasswordResponse(
-    val `data`: String,
+    val data: String,
     val message: String,
     val status_code: Int,
     val type: String

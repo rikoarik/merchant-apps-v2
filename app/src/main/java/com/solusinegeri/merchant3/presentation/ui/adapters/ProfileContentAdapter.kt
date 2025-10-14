@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
+import com.solusinegeri.merchant3.data.model.UpdateUserModel
+import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
+import kotlin.String
 
 @Suppress("DEPRECATION")
 @SuppressLint("NotifyDataSetChanged")
@@ -101,6 +104,24 @@ class ProfileContentAdapter (
     fun setEnableEditable(state: Boolean){ isEdit = state }
 
     fun getEditTextData() : Map<String, String> = editItems.associate { it.id to it.content }
+    
+    fun getData() : UpdateUserModel{
+        val items  = editItems.associate { it.id to it.content }
+        return UpdateUserModel(
+            city = "",
+            isWa = false,
+            lang = "id",
+            name = items["user_name"]?.trim() ?: "",
+            phone = items["user_phone"]?.trim() ?: "",
+            gender = "",
+            village = "",
+            address = items["user_address"]?.trim() ?: "",
+            province = "",
+            district = "",
+            dateOfBirth = "",
+            placeOfBirth = items["user_birth_loc"]?.trim() ?: ""
+        )
+    }
 
 
 }

@@ -19,6 +19,7 @@ import com.solusinegeri.merchant3.core.utils.UIThemeUpdater
 import com.solusinegeri.merchant3.data.model.ProfileMenuItem
 import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
+import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
 import com.solusinegeri.merchant3.presentation.ui.menu.menupin.PinMenuActivity
 import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
@@ -37,7 +38,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     private lateinit var menuAdapter: ProfileMenuAdapter
     private lateinit var authRepository: AuthRepository
     
-    override val viewModel: ProfileViewModel by lazy { ProfileViewModel() }
+    override val viewModel: ProfileViewModel by lazy {
+        ProfileViewModel(
+            ProfileRepository(
+                requireContext()
+            )
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

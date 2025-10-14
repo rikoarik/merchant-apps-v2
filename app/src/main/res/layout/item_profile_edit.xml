@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_marginHorizontal="@dimen/_20sdp"
-    android:layout_marginVertical="@dimen/_4sdp">
+    android:layout_marginVertical="@dimen/_12sdp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ed_box"
@@ -26,7 +26,6 @@
             android:id="@+id/ed_edit"
             android:layout_height="@dimen/_56sdp"
             android:layout_width ="match_parent"
-            android:singleLine   ="true"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:singleLine   ="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.solusinegeri.merchant3.data.network
 
+import com.solusinegeri.merchant3.data.model.PasswordEditModel
 import com.solusinegeri.merchant3.data.model.StrengthPasswordResponse
+import com.solusinegeri.merchant3.data.model.UpdateUserModel
+import com.solusinegeri.merchant3.data.model.UserResponse
 import com.solusinegeri.merchant3.data.requests.LoginRequest
 import com.solusinegeri.merchant3.data.responses.InitialCompanyResponse
 import com.solusinegeri.merchant3.data.responses.LoginResponse
@@ -29,10 +32,17 @@ interface AuthService {
 
     @Headers("Content-Type: application/json")
     @POST("/user/account/merchant/change_password")
-    suspend fun changePassword(@Body info: com.solusinegeri.merchant3.data.model.PasswordEditModel): Response<ResponseBody>
+    suspend fun changePassword(@Body info: PasswordEditModel): Response<ResponseBody>
+
+    @Headers("Content-Type: application/json")
+    @POST("/user/account/merchant/profile")
+    suspend fun updateProfile(@Body info: UpdateUserModel): Response<ResponseBody>
 
     @GET("/user/info/company/get_password_strength/{companyId}")
     suspend fun getConfigStrengthPassword(
         @Path("companyId") companyId: String
     ): Response<StrengthPasswordResponse>
+
+    @GET("/user/account/merchant/profile")
+    suspend fun getMerchantProfile(): Response<UserResponse>
 }
