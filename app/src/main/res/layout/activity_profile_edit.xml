@@ -26,8 +26,8 @@
             android:gravity      ="center">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="@dimen/_200sdp"
-                android:layout_height="@dimen/_200sdp"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="@dimen/_120sdp"
                 android:layout_marginTop="@dimen/_12sdp"
                 app:cardCornerRadius="@dimen/_100sdp"
                 app:cardElevation="@dimen/_2sdp"
@@ -35,8 +35,8 @@
 
                 <ImageView
                     android:id="@+id/img_profile"
-                    android:layout_width="@dimen/_200sdp"
-                    android:layout_height="@dimen/_200sdp"
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_120sdp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_profile_placeholder"
                     tools:ignore="ContentDescription" />
@@ -51,34 +51,46 @@
                 android:scrollbars="vertical"
                 android:fadeScrollbars="true"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/ed_box_birthdate"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width ="match_parent"
-                android:visibility   ="invisible"
-                android:hint         ="@string/profile_edit_b_day_item"
 
                 android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginVertical  ="@dimen/_12sdp"
+                android:orientation="vertical">
 
-                app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-                app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
-                app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
-                app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+                <TextView
+                    android:id="@+id/ed_tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_edit_b_loc_item"
+                    />
 
-                app:boxBackgroundColor="@color/white_dynamic"
-                app:hintTextColor     ="@color/black"
-                app:endIconMode       ="custom"
-                app:endIconDrawable   ="@drawable/calendernew">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/ed_edit_birthdate"
-                    android:layout_height="@dimen/_56sdp"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ed_box_birthdate"
+                    android:layout_height="wrap_content"
                     android:layout_width ="match_parent"
-                    android:singleLine   ="true"
-                    android:focusable    ="false"
-                    android:textColor    ="@color/color_dark_gray"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:visibility   ="visible"
+
+                    app:boxCornerRadiusBottomStart="@dimen/_12sdp"
+                    app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
+                    app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
+                    app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+
+                    app:boxBackgroundColor="@color/white_dynamic"
+                    app:hintTextColor     ="@color/black"
+                    app:endIconMode       ="custom"
+                    app:endIconDrawable   ="@drawable/calendernew">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ed_edit_birthdate"
+                        android:layout_height="@dimen/_56sdp"
+                        android:layout_width ="match_parent"
+                        android:singleLine   ="true"
+                        android:focusable    ="false"
+                        android:textColor    ="@color/color_dark_gray"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
-import com.solusinegeri.merchant3.data.model.UpdateUserModel
+import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
 import kotlin.String
 
@@ -46,7 +46,7 @@ class ProfileContentAdapter (
     ) : RecyclerView.ViewHolder(binding.root){
         fun bind( itemData : ProfileEditItem ){
             binding.edEdit .setText(itemData.content)
-            binding.edBox  .hint = itemData.title
+            binding.tvTitle.text = itemData.title
             binding.edBox  .boxStrokeColor = boxSpotColor
 
             if(!itemData.editable || !isEdit){
@@ -100,12 +100,10 @@ class ProfileContentAdapter (
     }
 
     fun setEnableEditable(state: Boolean){ isEdit = state }
-
-    fun getEditTextData() : Map<String, String> = editItems.associate { it.id to it.content }
     
-    fun getData() : UpdateUserModel{
+    fun getData() : UpdateUserRequest{
         val items  = editItems.associate { it.id to it.content }
-        return UpdateUserModel(
+        return UpdateUserRequest(
             city = "",
             isWa = false,
             lang = "id",

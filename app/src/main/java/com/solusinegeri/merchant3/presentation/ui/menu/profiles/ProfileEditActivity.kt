@@ -1,18 +1,29 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
+import android.Manifest
 import android.R
+import android.app.ComponentCaller
 import android.app.DatePickerDialog
+import android.content.ContentValues
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Typeface
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.text.InputType
 import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.R.color
 import com.solusinegeri.merchant3.core.base.BaseActivity
-import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.repository.ProfileRepository
@@ -21,10 +32,18 @@ import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileContentAdapter
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.OperationUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import androidx.core.net.toUri
+import kotlin.text.insert
 
+
+@Suppress("DEPRECATION")
 class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileViewModel>() {
     override val viewModel: ProfileViewModel by lazy {
         ProfileViewModel(
@@ -33,17 +52,21 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             )
         )
     }
-
-    private val USER_MAP_NAME   = "user_name"
-    private val USER_MAP_ID     = "user_id"
-    private val USER_MAP_EMAIL  = "user_email"
-    private val USER_MAP_PHONE  = "user_phone"
-    private val USER_MAP_B_DATE = "user_birthday"
-    private val USER_MAP_ADDR   = "user_address"
-    private val USER_MAP_B_LOC  = "user_birth_loc"
+    companion object {
+        private const val CAMERA_PERMISSION_CODE = 1001
+        private const val USER_MAP_NAME   = "user_name"
+        private const val USER_MAP_ID     = "user_id"
+        private const val USER_MAP_EMAIL  = "user_email"
+        private const val USER_MAP_PHONE  = "user_phone"
+        private const val USER_MAP_ADDR   = "user_address"
+        private const val USER_MAP_B_LOC  = "user_birth_loc"
+        private const val REQUEST_GALLERY = 7
+        private const val REQUEST_CAMERA  = 8
+    }
 
     var calendar = Calendar.getInstance()
     var selectedGender = ""
+    private var imageUri: Uri? = null
 
     private lateinit var itemAdapter: ProfileContentAdapter
 
@@ -71,10 +94,11 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
     override fun observeViewModel() {
         super.observeViewModel()
-        viewModel.profileUiState.observe(this){state ->
+        viewModel.profileUiState.observe(this){ state ->
             when(state){
                 is DataUiState.Error   -> {
                     showError(state.message)
+                    showLoading(false)
                 }
                 is DataUiState.Idle    -> {
                     binding.btnEditProfile.reset()
@@ -90,6 +114,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                     setupRecyclerItems()
                     setupAdditionalViews()
                     state.data.let { profile ->
+                        updateImageView(profile.profileImage ?: "")
                         binding.apply {
                             edEditBirthdate.setText(profile.dateOfBirth)
                             profile.gender.let {
@@ -108,18 +133,33 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             when(state){
                 is OperationUiState.Error   -> {
                     showError(state.message)
-                }
-                is OperationUiState.Idle    -> {
                     showLoading(false)
                 }
-                is OperationUiState.Loading -> {
-                    showLoading(true)
-                }
+                is OperationUiState.Idle    -> showLoading(false)
+                is OperationUiState.Loading -> showLoading(true)
                 is OperationUiState.Success -> {
                     showLoading(false)
                     setupRecyclerView()
                     loadUser()
                     viewModel.showDialogue(this, "Edit Profile Berhasil")
+                }
+            }
+        }
+
+        viewModel.uploadImageState.observe(this ){ state ->
+            when(state){
+                is DataUiState.Error   -> {
+                    showError(state.message)
+                    showLoading(false)
+                }
+                is DataUiState.Idle    -> showLoading(false)
+                is DataUiState.Loading -> showLoading(true)
+                is DataUiState.Success -> {
+                    showLoading(false)
+                    state.data.let { profile ->
+                        updateImageView(profile.profileImage ?: "")
+                        viewModel.showDialogue(this, "Edit Foto Profil Berhasil")
+                    }
                 }
             }
         }
@@ -152,14 +192,13 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
     private fun setupAdditionalViews(){
         binding.edBoxBirthdate.apply {
-            hint = getString(string.profile_edit_b_day_item)
             visibility = View.VISIBLE
         }
         binding.edEditBirthdate.apply {
             isFocusable = false
             inputType   = InputType.TYPE_NULL
             fontVariationSettings = "'wght' 300"
-            setTextColor(resources.getColor(R.color.darker_gray))
+            setTextColor(resources.getColor(color.color_dark_gray))
         }
     }
 
@@ -182,6 +221,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
      * Initialising RecyclerViews
      */
     //region recyclerview initialisation
+
     private fun setupRecyclerView(){
         itemAdapter = ProfileContentAdapter(emptyList())
         itemAdapter.setEnableEditable(true)
@@ -233,6 +273,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         itemAdapter.clearRecyclerItems()
         itemAdapter.addRecyclerItems(items)
     }
+
     //endregion
 
 
@@ -248,21 +289,21 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                 selectedGender = if (rbMale.id == checkedId) "male" else "female"
             }
 
+            imgProfile.setOnClickListener { showImageOption() }
+
             btnEditProfile.setOnClickListener {
                 val userEditData = itemAdapter.getData() //Returns a UserUpdateModel
 
-                if(userEditData.name.isEmpty()){
-                    showError("Nama tidak boleh kosong!")
-                }
-                else if(edEditBirthdate.text.toString().isEmpty()){
-                    showError("Tanggal lahir tidak boleh kosong!")
-                }
+                if(userEditData.name.isEmpty()){ showError("Nama tidak boleh kosong!") }
+
+                else if(edEditBirthdate.text.toString().isEmpty()){ showError("Tanggal lahir tidak boleh kosong!") }
+
                 else{
                     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
                     dateFormat.isLenient = false // Supaya tidak menerima tanggal yang salah
 
                     try                  { dateFormat.parse(edEditBirthdate.text.toString()) }
-                    catch (e: Exception) { showError("Format tanggal tidak valid! Contoh 1992-02-21") }
+                    catch (e: Exception) { showError("Format tanggal tidak valid! Contoh 1992-02-21 || " + e.message) }
 
                     userEditData.gender      = selectedGender
                     userEditData.dateOfBirth = edEditBirthdate.text.toString()
@@ -302,6 +343,138 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         }
     }
     //endregion
+
+    //region Image Control
+
+    private val isCameraAvail: Boolean get() = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+
+    private fun showImageOption(){
+        val items = if(isCameraAvail) arrayOf("Gallery", "Camera") else arrayOf("Gallery")
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Add Image")
+        alertDialog.setItems(items){_, item ->
+            when (items[item]) {
+                "Camera" -> {getCameraPerms()}
+                "Gallery" -> {getGallery()}
+            }
+        }
+        alertDialog.show()
+    }
+
+    private fun getGallery(){
+        val intent = if(Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
+            Intent(Intent.ACTION_GET_CONTENT).apply {
+                setType("image/*")
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+            }
+        }
+        else {
+            Intent(Intent.ACTION_VIEW).apply {
+                setType("image/*")
+            }
+        }
+        startActivityForResult(intent, REQUEST_GALLERY)
+    }
+
+    private fun getCameraPerms(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                CAMERA_PERMISSION_CODE
+            )
+        } else {
+            getCamera()
+        }
+    }
+
+    private fun getCamera(){
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.TITLE, "New Picture")
+            put(MediaStore.Images.Media.DESCRIPTION, "From Camera")
+        }
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+        }
+        startActivityForResult(intent, REQUEST_CAMERA)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String?>,
+        grantResults: IntArray,
+        deviceId: Int
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
+
+        if (requestCode == CAMERA_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            getCamera()
+        }
+        else {
+            Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+        caller: ComponentCaller
+    ) {
+        super.onActivityResult(requestCode, resultCode, data, caller)
+
+        println("Result has been called")
+        println(resultCode)
+
+        if(resultCode == RESULT_OK){
+            when(requestCode){
+                REQUEST_GALLERY -> {
+                    imageUri = data?.data
+                    uploadImage()
+                }
+                REQUEST_CAMERA -> { uploadImage() }
+            }
+        }
+    }
+
+    private fun uploadImage(){
+        imageUri?.let { uri ->
+            val file = File(getRealImagePath(uri))
+            val imageBody = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val imageReqBody =
+                MultipartBody.Part.createFormData(
+                    "profilePicture",
+                    file.name,
+                    imageBody
+                )
+
+            viewModel.uploadProfilePicture(imageReqBody)
+        }
+    }
+
+    private fun getRealImagePath(uri: Uri): String{
+        var path = ""
+        contentResolver.query(
+            uri,
+            arrayOf(MediaStore.Images.Media.DATA),
+            null,
+            null,
+            null
+        )?.apply {
+            moveToFirst()
+            path = getString(getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+            close()
+        }
+        return path
+    }
+
+    //endregion
+
 
     private fun updateDateView(){
         val myFormat = "yyy-MM-dd" // mention the format you need
