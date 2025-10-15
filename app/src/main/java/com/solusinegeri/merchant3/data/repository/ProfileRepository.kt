@@ -1,6 +1,7 @@
 package com.solusinegeri.merchant3.data.repository
 
 import android.content.Context
+import com.solusinegeri.merchant3.core.network.safeApiCall
 import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.utils.ErrorParser
 import com.solusinegeri.merchant3.data.model.PasswordEditModel
@@ -12,103 +13,66 @@ import com.solusinegeri.merchant3.data.responses.LoginResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 
-class ProfileRepository(val appContext: Context) {
-
-    private val userService: AuthService by lazy {
-        NetworkClient.createService(AuthService::class.java)
-    }
+class ProfileRepository(
+    private val appContext: Context,
+    private val userService: AuthService = NetworkClient.createService(AuthService::class.java),
+    private val authRepositoryProvider: (Context) -> AuthRepository = { context -> AuthRepository(context) }
+) {
 
     /**
-     * Changes user password
+     * Changes the User Password
      */
     suspend fun changePassword(
-        oldPassword    : String,
-        newPassword    : String,
+        oldPassword: String,
+        newPassword: String,
         confirmPassword: String
-    ) : Result<ResponseBody>{
-        return try {
-            val request  = PasswordEditModel(oldPassword, newPassword, confirmPassword)
-            val response = userService.changePassword(request)
+    ): Result<ResponseBody> {
+        val request = PasswordEditModel(oldPassword, newPassword, confirmPassword)
 
-            if(response.isSuccessful){
-                val passChangeResponse = response.body()
-
-                if(passChangeResponse != null){
-                    savePassword(newPassword)
-                    val refreshResponse =  refreshToken()
-                    refreshResponse.fold(
-                        onSuccess = { response -> Result.success(passChangeResponse) },
-                        onFailure = { error    -> Result.failure(Exception("Refresh token failed: ${error.message}")) }
-                    )
-                }
-                else{ Result.failure(Exception("Empty response")) }
-            }
-            else{
-                val errMessage = ErrorParser.parseErrorBody(
-                    response.errorBody()?.string() ?: "",
-                    response.code()
-                )
-                Result.failure(Exception(errMessage))
-            }
-
-        } catch (err: Exception){
-            Result.failure(Exception("Error dalam mengubah password ${err.message}"))
+        return safeApiCall(
+            apiCall = { userService.changePassword(request) },
+            onEmptyBody = { IllegalStateException("Response body kosong") },
+            errorParser = { ErrorParser.parseErrorResponse(it) }
+        ).mapCatching { responseBody ->
+            savePassword(newPassword)
+            refreshToken().getOrElse { error -> throw error }
+            responseBody
         }
     }
 
     /**
-     * Fetches the user profile from BackEnd
+     * Fetches the Merchant's User Data
      */
-    suspend fun getProfile(): Result<UserData>{
-        return try{
-            val response = userService.getProfile()
-            if(response.isSuccessful){
-                val userResponse = response.body()
-                if(userResponse?.data != null){
-                    Result.success(userResponse.data)
-                }
-                else{
-                    Result.failure(Exception("Result body is empty"))
-                }
-            }
-            else{
-                val errMessage = ErrorParser.parseErrorBody(
-                    response.errorBody()?.string() ?: "",
-                    response.code()
-                )
-                Result.failure(Exception(errMessage))
-            }
-        }catch (e: Exception){
-            Result.failure(e)
+    suspend fun getProfile(): Result<UserData> =
+        safeApiCall(
+            apiCall = { userService.getProfile() },
+            onEmptyBody = { IllegalStateException("Result body is empty") },
+            errorParser = { ErrorParser.parseErrorResponse(it) }
+        ).mapCatching { response ->
+            response.data ?: throw IllegalStateException("Data user tidak ditemukan")
         }
-    }
 
     /**
      * Updates the user profile data
      */
-    suspend fun updateProfile(request: UpdateUserRequest): Result<ResponseBody>{
-        return try {
-            val response = userService.updateProfile(request)
-            if(response.isSuccessful){
-                val updateResponse = response.body()
-                if(updateResponse != null){
-                    Result.success(updateResponse)
-                }
-                else{
-                    Result.failure(Exception("Empty response"))
-                }
-            }
-            else{
-                val errMessage = ErrorParser.parseErrorBody(
-                    response.errorBody()?.string() ?: "",
-                    response.code()
-                )
-                Result.failure(Exception(errMessage))
-            }
+    suspend fun updateProfile(request: UpdateUserRequest): Result<ResponseBody> =
+        safeApiCall(
+            apiCall = { userService.updateProfile(request) },
+            onEmptyBody = { IllegalStateException("Response body kosong") },
+            errorParser = { ErrorParser.parseErrorResponse(it) }
+        )
+
+    /**
+     * Refreshes auth token after successful change password by calling login
+     */
+
+    private suspend fun refreshToken(): Result<LoginResponse> {
+        val authRepository = authRepositoryProvider(appContext)
+        val (companyId, username, password) = authRepository.getLoginCredentials()
+        if (companyId.isNullOrBlank() || username.isNullOrBlank() || password.isNullOrBlank()) {
+            return Result.failure(IllegalStateException("Login credentials not found for refresh"))
         }
-        catch (err: Exception){
-            Result.failure(err)
-        }
+        return authRepository.login(companyId, username, password)
     }
 
     /**
@@ -135,25 +99,6 @@ class ProfileRepository(val appContext: Context) {
             }
         }catch (err: Exception){
             Result.failure(err)
-        }
-    }
-
-    /**
-     * Refreshes auth token after successful change password by calling login
-     */
-    private suspend fun refreshToken(): Result<LoginResponse>{
-        return try{
-            val authRepository = AuthRepository(appContext)
-            val (companyId, username, password) = authRepository.getLoginCredentials()
-            if (!companyId.isNullOrBlank() || !username.isNullOrBlank() || !password.isNullOrBlank()){
-                AuthRepository(appContext).login(companyId!!, username!!, password!!)
-            }
-            else{
-                Result.failure(Exception("Login credentials not found for refresh"))
-            }
-        }
-        catch (e: Exception){
-            Result.failure(Exception(e))
         }
     }
 

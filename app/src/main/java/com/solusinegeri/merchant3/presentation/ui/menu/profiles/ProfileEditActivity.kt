@@ -28,7 +28,7 @@ import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.ActivityProfileEditBinding
-import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileContentAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.adapter.ProfileContentAdapter
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.OperationUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
@@ -198,7 +198,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             isFocusable = false
             inputType   = InputType.TYPE_NULL
             fontVariationSettings = "'wght' 300"
-            setTextColor(resources.getColor(color.color_dark_gray))
+            setTextColor(resources.getColor(R.color.darker_gray))
         }
     }
 
@@ -310,7 +310,6 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
                     viewModel.updateProfile(userEditData)
                 }
-
             }
         }
     }

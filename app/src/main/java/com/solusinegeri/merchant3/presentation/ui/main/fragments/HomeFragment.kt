@@ -2,10 +2,13 @@ package com.solusinegeri.merchant3.presentation.ui.main.fragments
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseFragment
@@ -14,7 +17,7 @@ import com.solusinegeri.merchant3.core.utils.UIThemeUpdater
 import com.solusinegeri.merchant3.data.responses.BalanceData
 import com.solusinegeri.merchant3.data.responses.MenuData
 import com.solusinegeri.merchant3.databinding.FragmentHomeBinding
-import com.solusinegeri.merchant3.presentation.ui.adapters.MenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.main.adapter.MenuAdapter
 import com.solusinegeri.merchant3.presentation.ui.main.handler.MenuHandler
 import com.solusinegeri.merchant3.presentation.ui.main.utils.BalanceCodeManager
 import com.solusinegeri.merchant3.presentation.ui.main.utils.BalanceUtils
@@ -30,7 +33,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
     private lateinit var menuHandler: MenuHandler
 
     private var currentBalanceData: BalanceData? = null
-    private var balanceCode: String = "CLOSEPAY"
+    private var balanceCode: String = ""
 
     // ---- Loading flags untuk kontrol SwipeRefresh ----
     private var isMenuLoading = false
@@ -45,19 +48,28 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        // inflate layout
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, 0, systemBars.right, -16)
+            insets
+        }
+
+        return view
+    }
 
     override fun getViewBinding(view: View): FragmentHomeBinding = FragmentHomeBinding.bind(view)
 
     override fun setupUI() {
         super.setupUI()
-
+        observeViewModel()
         initializeComponents()
         setupMenuRecyclerView()
         setupSwipeRefresh()
         setupTextContent()
-        setupBalanceToggle()
-        observeViewModel()
         updateUIWithDynamicColors()
         loadHomeData()
     }
@@ -107,19 +119,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         }
     }
 
-    private fun setupBalanceToggle() {
-        BalanceUtils.applyInitialState(
-            binding.tvBalance,
-            binding.ivToggleBalance,
-            currentBalanceData,
-            balanceCode
-        )
-    }
-
     private fun loadHomeData() {
         viewModel.loadMenuData()
         viewModel.loadBalanceData(balanceCode)
-        viewModel.loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
     }
 
     override fun observeViewModel() {
@@ -171,6 +173,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
                 }
                 is DataUiState.Success -> {
                     isBalanceLoading = false
+                    Log.d("HomeFragment", "Balance data: ${state.data}")
+                    currentBalanceData = state.data
+                    updateBalanceDisplay(state.data)
                     updateRefreshingIndicator()
                 }
                 is DataUiState.Error -> {
@@ -186,33 +191,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
             }
         }
 
-        viewModel.balanceData.observe(viewLifecycleOwner) { balanceData ->
-            currentBalanceData = balanceData
-            updateBalanceDisplay(balanceData)
-        }
-
     }
 
     fun refreshMenuData() {
         viewModel.refreshData(balanceCode)
-        viewModel.loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
-    }
-
-    private fun refreshMenuDataSilent() {
-        viewModel.refreshData(balanceCode)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshMenuDataSilent()
-    }
-
-    fun refreshData() {
-        refreshMenuData()
-    }
-
-    fun refreshDataSilent() {
-        refreshMenuDataSilent()
+        viewModel.loadMenuData()
     }
 
     private fun updateUIWithDynamicColors() {
@@ -235,21 +218,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
         binding.tvMenuTitle.text = getString(R.string.label_fitur_utama)
     }
 
-    private fun updateBalanceDisplay(balanceData: BalanceData?) {
+    private fun updateBalanceDisplay(balanceData: BalanceData) {
         val visible = BalanceUtils.isBalanceCurrentlyVisible(balanceCode)
-        if (balanceData == null) {
-            if (visible) {
-                binding.tvBalance.text = getString(R.string.placeholder_balance)
-                binding.ivToggleBalance.text = getString(R.string.hide_balance)
-            } else {
-                binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
-                binding.ivToggleBalance.text = getString(R.string.show_balance)
-            }
-            return
-        }
 
         if (visible) {
-            binding.tvBalance.text = BalanceUtils.formatBalanceWithStatus(balanceData)
+            binding.tvBalance.text = BalanceUtils.formatBalance(balanceData.balance ?: 0.0)
             binding.ivToggleBalance.text = getString(R.string.hide_balance)
         } else {
             binding.tvBalance.text = BalanceUtils.formatBalanceHidden()
@@ -259,6 +232,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
 
     override fun showError(message: String) {
         super.showError(message)
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     private fun handleTopUpClick() {

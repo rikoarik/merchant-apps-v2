@@ -6,6 +6,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.UserData
@@ -89,8 +90,8 @@ class ProfileViewModel constructor(
     }
 
     fun changePass(
-        oldPassword    : String,
-        newPassword    : String,
+        oldPassword: String,
+        newPassword: String,
         confirmPassword: String
     ){
         _passwordChangeState.value = DataUiState.Loading

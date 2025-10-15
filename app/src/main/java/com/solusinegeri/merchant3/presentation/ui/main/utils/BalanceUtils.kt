@@ -14,34 +14,14 @@ object BalanceUtils {
     private const val HIDDEN_PLACEHOLDER = " Rp ••••••••"
 
     /** ===== Formatter ===== */
-    fun formatBalance(balanceData: BalanceData): String {
-        val balance = balanceData.balance ?: 0.0
-        val currency = (balanceData.currency ?: "IDR").uppercase()
-
-        return when (currency) {
-            "IDR", "RUPIAH" -> {
-                val raw = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(balance)
-                val fixed = raw.replaceFirst(Regex("^Rp(?:\\s|\\u00A0)*"), " Rp ")
-                if (fixed.startsWith(" Rp ")) fixed else " Rp $fixed"
-            }
-            "USD" -> {
-                val raw = NumberFormat.getCurrencyInstance(Locale.US).format(balance)
-                " $raw"
-            }
-            else -> {
-                val num = NumberFormat.getNumberInstance(Locale.getDefault()).format(balance)
-                " $currency $num"
-            }
-        }
+    fun formatBalance(balance: Double): String {
+        val formatted = NumberFormat.getNumberInstance(Locale("id", "ID")).format(balance)
+        return "Rp $formatted"
     }
+
 
 
     fun formatBalanceHidden(): String = HIDDEN_PLACEHOLDER
-
-    fun formatBalanceWithStatus(balanceData: BalanceData): String {
-        val text = formatBalance(balanceData)
-        return if (balanceData.isBlocked == true) "$text (Blocked)" else text
-    }
 
     /** ===== State Management (per balanceCode) ===== */
     fun isBalanceCurrentlyVisible(balanceCode: String): Boolean {
@@ -85,7 +65,7 @@ object BalanceUtils {
         toggleTextView: TextView,
         balanceData: BalanceData?
     ) {
-        val text = balanceData?.let { formatBalanceWithStatus(it) } ?: " Rp 0"
+        val text = formatBalance(balanceData?.balance ?: 0.0)
         animateTextChange(balanceTextView, text)
         toggleTextView.text = "Hide"
     }

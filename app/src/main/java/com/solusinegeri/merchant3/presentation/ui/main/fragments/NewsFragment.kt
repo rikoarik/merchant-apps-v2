@@ -2,13 +2,11 @@ package com.solusinegeri.merchant3.presentation.ui.main.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.R
@@ -17,7 +15,7 @@ import com.solusinegeri.merchant3.core.utils.DateUtils
 import com.solusinegeri.merchant3.data.responses.NewsData
 import com.solusinegeri.merchant3.data.responses.NewsListResponse
 import com.solusinegeri.merchant3.databinding.FragmentNewsBinding
-import com.solusinegeri.merchant3.presentation.ui.adapters.NewsPagingAdapter
+import com.solusinegeri.merchant3.presentation.ui.main.adapter.NewsPagingAdapter
 import com.solusinegeri.merchant3.presentation.ui.menu.news.NewsDetailActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.NewsInfoViewModel
