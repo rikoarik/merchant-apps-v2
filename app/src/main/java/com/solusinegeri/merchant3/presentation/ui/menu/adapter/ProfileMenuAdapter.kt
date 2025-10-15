@@ -1,8 +1,7 @@
-package com.solusinegeri.merchant3.presentation.ui.adapters
+package com.solusinegeri.merchant3.presentation.ui.menu.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileMenuItem

@@ -1,17 +1,16 @@
-package com.solusinegeri.merchant3.presentation.ui.adapters
+package com.solusinegeri.merchant3.presentation.ui.menu.adapter
 
 import android.R.color
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.model.UpdateUserModel
-import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
 import kotlin.String
 
@@ -58,7 +57,6 @@ class ProfileContentAdapter (
                 }
                 if(!itemData.editable && isEdit){
                     binding.edEdit.apply {
-                        fontVariationSettings = TEXT_WGHT_LIGHT
                         setTextColor(resources.getColor(color.darker_gray))
                     }
                 }
@@ -66,7 +64,6 @@ class ProfileContentAdapter (
             // Sets the
             else{
                 binding.edEdit.apply {
-                    fontVariationSettings = TEXT_WGHT_NORMAL
                     addTextChangedListener(object: TextWatcher{
                         override fun afterTextChanged (s: Editable?) {
                             itemData.content = s.toString()

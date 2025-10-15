@@ -1,14 +1,13 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
-import android.R
 import android.app.DatePickerDialog
 import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.text.InputType
 import android.view.View
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.R.color
 import com.solusinegeri.merchant3.core.base.BaseActivity
@@ -17,7 +16,7 @@ import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.ActivityProfileEditBinding
-import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileContentAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.adapter.ProfileContentAdapter
 import com.solusinegeri.merchant3.presentation.viewmodel.DataUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.OperationUiState
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
@@ -159,7 +158,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             isFocusable = false
             inputType   = InputType.TYPE_NULL
             fontVariationSettings = "'wght' 300"
-            setTextColor(resources.getColor(R.color.darker_gray))
+            setTextColor(resources.getColor(R.color.color_dark_gray))
         }
     }
 

@@ -36,10 +36,6 @@
             android:name=".presentation.ui.menu.analytics.AnalyticsActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.menu.analytics.MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SolusiNegeriMerchant" />
-        <activity
             android:name=".presentation.ui.menu.news.NewsDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.SolusiNegeriMerchant" /> <!-- Splash Activity - Main Launcher -->

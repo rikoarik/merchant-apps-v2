@@ -1,10 +1,10 @@
 package com.solusinegeri.merchant3.presentation.viewmodel
 
-import android.R
 import android.app.AlertDialog
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.UpdateUserModel
@@ -82,8 +82,8 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
     }
 
     fun changePass(
-        oldPassword    : String,
-        newPassword    : String,
+        oldPassword: String,
+        newPassword: String,
         confirmPassword: String
     ){
         _passwordChangeState.value = DataUiState.Loading

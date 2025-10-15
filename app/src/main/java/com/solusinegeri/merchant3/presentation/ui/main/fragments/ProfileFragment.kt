@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -15,14 +17,13 @@ import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseFragment
 import com.solusinegeri.merchant3.core.security.SecureStorage
 import com.solusinegeri.merchant3.core.utils.DynamicColors
-import com.solusinegeri.merchant3.core.utils.UIThemeUpdater
 import com.solusinegeri.merchant3.data.model.ProfileMenuItem
 import com.solusinegeri.merchant3.data.repository.AuthRepository
 import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.data.repository.ProfileRepository
 import com.solusinegeri.merchant3.databinding.FragmentProfileBinding
 import com.solusinegeri.merchant3.presentation.ui.menu.menupin.PinMenuActivity
-import com.solusinegeri.merchant3.presentation.ui.adapters.ProfileMenuAdapter
+import com.solusinegeri.merchant3.presentation.ui.menu.adapter.ProfileMenuAdapter
 import com.solusinegeri.merchant3.presentation.ui.menu.profiles.PasswordEditActivity
 import com.solusinegeri.merchant3.presentation.ui.menu.profiles.ProfileEditActivity
 import com.solusinegeri.merchant3.presentation.viewmodel.ProfileViewModel
@@ -50,8 +51,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        // inflate layout
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, -16)
+            insets
+        }
+
+        return view
     }
 
     override fun getViewBinding(view: View): FragmentProfileBinding {
@@ -90,8 +100,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
         binding.cardProfile.setCardBackgroundColor(primaryColor)
         
         // Update logout button
-        binding.btnLogout.backgroundTintList = ColorStateList.valueOf(primaryColor)
-        
+        binding.btnLogout.strokeColor = ColorStateList.valueOf(primaryColor)
+        binding.btnLogout.setTextColor(primaryColor)
         // Update edit button stroke color
         binding.btnEditProfile.strokeColor = ColorStateList.valueOf(primaryColor)
         

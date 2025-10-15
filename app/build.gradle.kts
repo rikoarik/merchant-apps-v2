@@ -140,6 +140,8 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     //noinspection GradleDependency
     implementation(libs.androidx.navigation.compose)
+
+    implementation("com.github.AAChartModel:AAChartCore-Kotlin:7.3.0")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

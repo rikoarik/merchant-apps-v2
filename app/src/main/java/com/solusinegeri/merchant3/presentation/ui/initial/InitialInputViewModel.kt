@@ -4,7 +4,6 @@ import android.content.Context
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.repository.CompanyRepository
-import com.solusinegeri.merchant3.data.network.NetworkClient
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
@@ -26,7 +25,7 @@ class InitialInputViewModel : BaseViewModel() {
         _instansiResult.value = result
     }
     
-    private val companyRepository = CompanyRepository(NetworkClient.authService)
+    private val companyRepository = CompanyRepository()
     
     fun checkInstansi(context: Context, instansiCode: String) {
         launchCoroutine(showLoading = false) {
