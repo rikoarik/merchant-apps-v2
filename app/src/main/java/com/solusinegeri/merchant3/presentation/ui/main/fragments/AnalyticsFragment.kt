@@ -283,11 +283,6 @@ class AnalyticsFragment : BaseFragment<FragmentAnalyticsBinding, AnalyticsViewMo
         val list = summary.getDataAsList()
         summaryAnalyticsData = list
 
-        val totalTransactions = list.sumOf { it.amount }
-        val totalAmount = list.sumOf { it.total }
-
-        binding.tvTotalTransactions.text = totalTransactions.toString()
-        binding.tvTotalAmount.text = formatCurrency(totalAmount)
         updateTransactionDetailsFromAdapter()
     }
 
@@ -295,15 +290,7 @@ class AnalyticsFragment : BaseFragment<FragmentAnalyticsBinding, AnalyticsViewMo
         val items = transactionAdapter.getItems()
         val count = items.size
 
-        // asumsi amount bisa null → jadikan 0
-        val totalAmount = items.sumOf { (it.amount ?: 0) }
-
-        // contoh breakdown masuk/keluar (opsional)
-        val totalIn  = items.filter { (it.amount ?: 0) > 0 }.sumOf { it.amount ?: 0 }
-        val totalOut = items.filter { (it.amount ?: 0) < 0 }.sumOf { kotlin.math.abs(it.amount ?: 0) }
-
         binding.tvTransactionCount.text = "$count transaksi"
-        binding.tvTotalAmount.text = formatCurrency(totalAmount)
     }
 
     // --------------------------------------------------------------------
