@@ -10,6 +10,7 @@ import com.solusinegeri.merchant3.data.network.AuthService
 import com.solusinegeri.merchant3.data.network.NetworkClient
 import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.data.responses.LoginResponse
+import com.solusinegeri.merchant3.data.responses.UserProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 
@@ -78,27 +79,13 @@ class ProfileRepository(
     /**
      * Uploads the profile picture
      */
-    suspend fun uploadProfilePicture(picture: MultipartBody.Part): Result<UserData>{
-        return try{
-            val response = userService.postImage(picture)
-            if(response.isSuccessful){
-                val responseBody = response.body()
-                if(responseBody?.data != null){
-                    Result.success(responseBody.data)
-                }
-                else{
-                    Result.failure(Exception("Empty Response"))
-                }
-            }
-            else{
-                val errMessage = ErrorParser.parseErrorBody(
-                    response.errorBody()?.string() ?: "",
-                    response.code()
-                )
-                Result.failure(Exception(errMessage))
-            }
-        }catch (err: Exception){
-            Result.failure(err)
+    suspend fun uploadProfilePicture(picture: MultipartBody.Part) : Result<UserData>{
+        return safeApiCall(
+            apiCall = { userService.postImage(picture) },
+            onEmptyBody = { IllegalStateException("Result body is empty") },
+            errorParser = { ErrorParser.parseErrorResponse(it) }
+        ).mapCatching { response ->
+            response.data ?: throw IllegalStateException("Tidak dapat mengupload image")
         }
     }
 
