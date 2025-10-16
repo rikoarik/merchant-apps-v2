@@ -174,9 +174,9 @@
 
                     <ImageView
                         android:id="@+id/iv_calendar_icon"
-                        android:layout_width="@dimen/_32sdp"
-                        android:layout_height="@dimen/_32sdp"
-                        android:src="@drawable/calendernew"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:src="@drawable/ic_birthday"
                         />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -220,8 +220,8 @@
                     app:layout_constraintTop_toBottomOf="@id/ll_calendar_frame">
                     <ImageView
                         android:id="@+id/iv_gender_icon"
-                        android:layout_width="@dimen/_32sdp"
-                        android:layout_height="@dimen/_32sdp"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
                         android:src="@drawable/ic_gender_man"
                         />
                     <LinearLayout

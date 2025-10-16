@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/iv_icon"
-        android:layout_width="@dimen/_32sdp"
-        android:layout_height="@dimen/_32sdp"/>
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ed_box"
