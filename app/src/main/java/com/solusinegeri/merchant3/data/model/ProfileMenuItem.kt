@@ -11,5 +11,6 @@ data class ProfileEditItem(
     val id      : String,
     val title   : String,
     var content : String,
-    val editable: Boolean
+    val editable: Boolean,
+    val iconRes : Int? = null
 )

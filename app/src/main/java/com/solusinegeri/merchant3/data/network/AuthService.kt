@@ -2,17 +2,20 @@ package com.solusinegeri.merchant3.data.network
 
 import com.solusinegeri.merchant3.data.model.PasswordEditModel
 import com.solusinegeri.merchant3.data.model.StrengthPasswordResponse
-import com.solusinegeri.merchant3.data.model.UpdateUserModel
-import com.solusinegeri.merchant3.data.model.UserResponse
 import com.solusinegeri.merchant3.data.requests.LoginRequest
+import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.data.responses.InitialCompanyResponse
 import com.solusinegeri.merchant3.data.responses.LoginResponse
+import com.solusinegeri.merchant3.data.responses.UserProfileResponse
+import okhttp3.MultipartBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 /**
@@ -36,13 +39,19 @@ interface AuthService {
 
     @Headers("Content-Type: application/json")
     @POST("/user/account/merchant/profile")
-    suspend fun updateProfile(@Body info: UpdateUserModel): Response<ResponseBody>
+    suspend fun updateProfile(@Body info: UpdateUserRequest): Response<ResponseBody>
 
     @GET("/user/info/company/get_password_strength/{companyId}")
     suspend fun getConfigStrengthPassword(
         @Path("companyId") companyId: String
     ): Response<StrengthPasswordResponse>
 
+    @POST("/user/account/merchant/change_profile_picture")
+    @Multipart
+    suspend fun postImage(
+        @Part file: MultipartBody.Part
+    ): Response<UserProfileResponse>
+
     @GET("/user/account/merchant/profile")
-    suspend fun getMerchantProfile(): Response<UserResponse>
+    suspend fun getProfile(): Response<UserProfileResponse>
 }

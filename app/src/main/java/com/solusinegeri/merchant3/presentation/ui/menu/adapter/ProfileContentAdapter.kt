@@ -9,8 +9,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
-import com.solusinegeri.merchant3.data.model.UpdateUserModel
+import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
 import kotlin.String
 
@@ -46,9 +48,15 @@ class ProfileContentAdapter (
         private val binding: ItemProfileEditBinding
     ) : RecyclerView.ViewHolder(binding.root){
         fun bind( itemData : ProfileEditItem ){
+            val primaryColor = DynamicColors.getPrimaryColor(binding.root.context)
+
             binding.edEdit .setText(itemData.content)
             binding.edBox  .hint = itemData.title
             binding.edBox  .boxStrokeColor = boxSpotColor
+            binding.ivIcon.setColorFilter(primaryColor)
+            itemData.iconRes?.let { icon->
+                binding.ivIcon.setImageResource(icon)
+            }
 
             if(!itemData.editable || !isEdit){
                 binding.edEdit.apply {
@@ -99,17 +107,16 @@ class ProfileContentAdapter (
     }
 
     fun setEnableEditable(state: Boolean){ isEdit = state }
-
-    fun getEditTextData() : Map<String, String> = editItems.associate { it.id to it.content }
     
-    fun getData() : UpdateUserModel{
+    fun getData() : UpdateUserRequest{
         val items  = editItems.associate { it.id to it.content }
-        return UpdateUserModel(
+        return UpdateUserRequest(
             city = "",
             isWa = false,
             lang = "id",
             name = items["user_name"]?.trim() ?: "",
             phone = items["user_phone"]?.trim() ?: "",
+            email = items["user_email"]?.trim() ?: "",
             gender = "",
             village = "",
             address = items["user_address"]?.trim() ?: "",

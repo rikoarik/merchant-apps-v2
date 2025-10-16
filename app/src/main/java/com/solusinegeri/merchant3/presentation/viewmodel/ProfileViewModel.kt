@@ -1,21 +1,27 @@
 package com.solusinegeri.merchant3.presentation.viewmodel
 
+import android.R.color
 import android.app.AlertDialog
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.utils.DynamicColors
-import com.solusinegeri.merchant3.data.model.UpdateUserModel
 import com.solusinegeri.merchant3.data.model.UserData
 import com.solusinegeri.merchant3.data.repository.ProfileRepository
+import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
+import okhttp3.MultipartBody
+import java.io.File
 
 /**
  * Contoh implementasi ViewModel dengan UiState pattern
  * Bisa digunakan sebagai template untuk ViewModel lainnya
  */
-class ProfileViewModel(private var repository: ProfileRepository) : BaseViewModel() {
+class ProfileViewModel constructor(
+    private var repository: ProfileRepository
+) : BaseViewModel() {
     // Data LiveData
     private val _userData: MutableLiveData<UserData>  = MutableLiveData<UserData>()
     val userData: LiveData<UserData> = _userData
@@ -29,11 +35,13 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
     
     private val _updateProfileUiState = MutableLiveData<OperationUiState>()
     val updateProfileUiState: LiveData<OperationUiState> = _updateProfileUiState
+
+    private val _uploadImageState = MutableLiveData<DataUiState<UserData>>()
+    val uploadImageState: LiveData<DataUiState<UserData>> = _uploadImageState
     
     fun loadProfileData() {
         _profileUiState.value = DataUiState.Loading
         launchCoroutine(showLoading = false) {
-            // Simulasi API call
             try{
                 repository.getProfile()
                     .onSuccess { userData ->
@@ -53,7 +61,7 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
         }
     }
     
-    fun updateProfile(updateModel: UpdateUserModel) {
+    fun updateProfile(updateModel: UpdateUserRequest) {
         _updateProfileUiState.value = OperationUiState.Loading
         launchCoroutine(showLoading = false) {
             try {
@@ -72,7 +80,7 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
             }
         }
     }
-    
+
     fun clearProfileError() {
         _profileUiState.value = DataUiState.Idle
     }
@@ -105,6 +113,27 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
         }
     }
 
+    fun uploadProfilePicture(image: MultipartBody.Part){
+        _uploadImageState.value = DataUiState.Loading
+        launchCoroutine(showLoading = false) {
+            try{
+                repository.uploadProfilePicture(image)
+                    .onSuccess { userData ->
+                        _uploadImageState.value = DataUiState.Success(userData, "Berhasil mengupload foto profil")
+                    }
+                    .onFailure { err ->
+                        val message = err.message ?: "Gagal mengupload foto profil"
+                        _uploadImageState.value = DataUiState.Error(message)
+                        setError(message)
+                    }
+            }catch (err: Exception){
+                _uploadImageState.value = DataUiState.Error("Error: ${err.message}")
+                setError(err.message)
+            }
+        }
+    }
+
+
     //TODO(Replace with custom pup up at BaseViewModel)
     fun showDialogue(context: Context, message: String) {
         val dialog = AlertDialog.Builder(context)
@@ -121,7 +150,7 @@ class ProfileViewModel(private var repository: ProfileRepository) : BaseViewMode
         val primaryColor = DynamicColors.getPrimaryColor(context)
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
             setBackgroundColor(primaryColor)
-            setTextColor(resources.getColor(R.color.white))
+            setTextColor(resources.getColor(color.white))
         }
     }
 }

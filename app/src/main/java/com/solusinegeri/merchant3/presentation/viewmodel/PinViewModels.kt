@@ -4,6 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.solusinegeri.merchant3.core.base.BaseViewModel
+import com.solusinegeri.merchant3.core.security.SecureStorage
+import com.solusinegeri.merchant3.data.repository.PinCodeRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,28 +26,26 @@ sealed class ChangePinState {
 
 class ChangePinViewModel : BaseViewModel() {
 
+    private val repository = PinCodeRepository()
+
     private val _changePinState = MutableStateFlow<ChangePinState>(ChangePinState.Idle)
     val changePinState: StateFlow<ChangePinState> = _changePinState.asStateFlow()
 
     fun changePin(oldPin: String, newPin: String) {
-        launchCoroutine {
+        viewModelScope.launch {
             try {
                 _changePinState.value = ChangePinState.Loading
 
-                // TODO: Implement API call untuk change PIN
-                // Contoh:
-                // val response = authRepository.changePin(oldPin, newPin)
-                // if (response.isSuccess) {
-                //     _changePinState.value = ChangePinState.Success("PIN berhasil diubah")
-                // } else {
-                //     _changePinState.value = ChangePinState.Error(response.message)
-                // }
+                // Call API
+                val result = repository.changePin(oldPin, newPin)
 
-                // Simulasi delay API call
-                kotlinx.coroutines.delay(1500)
-
-                // Simulasi success response (ganti dengan real API call)
-                _changePinState.value = ChangePinState.Success("PIN berhasil diubah")
+                result.onSuccess { message ->
+                    _changePinState.value = ChangePinState.Success(message)
+                }.onFailure { error ->
+                    _changePinState.value = ChangePinState.Error(
+                        error.message ?: "Terjadi kesalahan saat mengubah PIN"
+                    )
+                }
 
             } catch (e: Exception) {
                 _changePinState.value = ChangePinState.Error(
@@ -86,24 +86,14 @@ class ForgotPinViewModel : BaseViewModel() {
         }
     }
 
+
     fun resetPin(otp: String, newPin: String) {
         launchCoroutine {
             try {
                 _forgotPinState.value = ForgotPinState.Loading
 
-                // TODO: Implement API call untuk reset PIN dengan OTP
-                // Contoh:
-                // val response = authRepository.resetPin(otp, newPin)
-                // if (response.isSuccess) {
-                //     _forgotPinState.value = ForgotPinState.Success("PIN berhasil direset")
-                // } else {
-                //     _forgotPinState.value = ForgotPinState.Error(response.message)
-                // }
-
-                // Simulasi delay API call
                 kotlinx.coroutines.delay(1500)
 
-                // Simulasi success response (ganti dengan real API call)
                 _forgotPinState.value = ForgotPinState.Success("PIN berhasil direset")
 
             } catch (e: Exception) {
@@ -113,4 +103,5 @@ class ForgotPinViewModel : BaseViewModel() {
             }
         }
     }
+
 }
