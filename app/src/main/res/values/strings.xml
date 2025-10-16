@@ -175,6 +175,8 @@
     <string name="profile_edit_gender_item"  >Jenis Kelamin</string>
     <string name="profile_edit_gender_female">Perempuan</string>
     <string name="profile_edit_gender_male"  >Laki - Laki</string>
+    <string name="profile_edit_photo"        >Ganti Foto</string>
+    <string name="profile_edit_remove_photo" >Hapus Foto</string>
 
     <!-- Ganti Pin Menu -->
     <string name="Pin_name">Pin</string>

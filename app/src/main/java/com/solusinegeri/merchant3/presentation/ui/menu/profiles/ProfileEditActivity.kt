@@ -39,8 +39,6 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import androidx.core.net.toUri
-import kotlin.text.insert
 
 
 @Suppress("DEPRECATION")
@@ -80,9 +78,9 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         setupEdgeToEdge()
         setupToolBar()
         setupRecyclerView()
-        updateUIWithDynamicColors()
         setupOnClickListeners()
         setupTypefaces()
+        updateUIWithDynamicColors()
         loadUser()
     }
 
@@ -122,6 +120,8 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                                 rbMale.isChecked   = it == "male"
                                 rbFemale.isChecked = it == "female"
                             }
+                            tvEmail.text = profile.email
+                            tvName.text  = profile.name
                         }
                     }
                     binding.edEditBirthdate.setText(viewModel.userData.value?.dateOfBirth)
@@ -174,6 +174,13 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         // Update profile placeholder icon
         binding.imgProfile.setColorFilter(primaryColor)
 
+        binding.btnChangePhoto.backgroundTintList = ColorStateList.valueOf(primaryColor)
+        binding.btnRemovePhoto.backgroundTintList = ColorStateList.valueOf(primaryColor)
+        binding.btnChangePhoto.strokeColor = ColorStateList.valueOf(primaryColor)
+        binding.btnRemovePhoto.strokeColor = ColorStateList.valueOf(primaryColor)
+
+        binding.ivBanner.setBackgroundColor(primaryColor)
+
         // Update recyclerview text fields
         itemAdapter.setBoxSpotColor(primaryColor)
     }
@@ -187,7 +194,13 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         val bold = Typeface.create("", Typeface.BOLD)
 
         //Setup toolbar title typeface
-        binding.toolbar.tvTitle.typeface = bold
+        binding.apply {
+            toolbar.tvTitle.typeface = bold
+            tvName.typeface          = bold
+            btnEditProfile.typeface  = bold
+            btnChangePhoto.typeface  = bold
+            btnRemovePhoto.typeface  = bold
+        }
     }
 
     private fun setupAdditionalViews(){
@@ -290,6 +303,8 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             }
 
             imgProfile.setOnClickListener { showImageOption() }
+            btnChangePhoto.setOnClickListener { showImageOption() }
+            btnRemovePhoto.setOnClickListener { Toast.makeText(baseContext, "Remove Profile Photo - Coming Soon", Toast.LENGTH_SHORT).show() }
 
             btnEditProfile.setOnClickListener {
                 val userEditData = itemAdapter.getData() //Returns a UserUpdateModel

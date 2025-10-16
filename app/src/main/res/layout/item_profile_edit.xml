@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginHorizontal="@dimen/_20sdp"
-    android:layout_marginVertical="@dimen/_12sdp">
+    android:layout_marginHorizontal="@dimen/medium_margin_twenty_four"
+    android:layout_marginVertical="@dimen/small_margin_16">
 
     <TextView
         android:id="@+id/tv_title"
@@ -20,10 +20,10 @@
         android:layout_height="wrap_content"
         android:layout_width ="match_parent"
 
-        app:boxCornerRadiusBottomStart="@dimen/_12sdp"
-        app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
-        app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
-        app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+        app:boxCornerRadiusBottomStart="@dimen/_16sdp"
+        app:boxCornerRadiusBottomEnd  ="@dimen/_16sdp"
+        app:boxCornerRadiusTopStart   ="@dimen/_16sdp"
+        app:boxCornerRadiusTopEnd     ="@dimen/_16sdp"
 
         app:boxBackgroundColor        ="@color/white_dynamic"
         app:hintTextColor             ="@color/black">
