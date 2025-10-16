@@ -1,16 +1,20 @@
-package com.solusinegeri.merchant3.presentation.ui.adapters
+package com.solusinegeri.merchant3.presentation.ui.menu.adapter
 
 import android.R.color
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
+import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
+import kotlin.String
 
 @Suppress("DEPRECATION")
 @SuppressLint("NotifyDataSetChanged")
@@ -44,9 +48,15 @@ class ProfileContentAdapter (
         private val binding: ItemProfileEditBinding
     ) : RecyclerView.ViewHolder(binding.root){
         fun bind( itemData : ProfileEditItem ){
+            val primaryColor = DynamicColors.getPrimaryColor(binding.root.context)
+
             binding.edEdit .setText(itemData.content)
             binding.edBox  .hint = itemData.title
             binding.edBox  .boxStrokeColor = boxSpotColor
+            binding.ivIcon.setColorFilter(primaryColor)
+            itemData.iconRes?.let { icon->
+                binding.ivIcon.setImageResource(icon)
+            }
 
             if(!itemData.editable || !isEdit){
                 binding.edEdit.apply {
@@ -55,7 +65,6 @@ class ProfileContentAdapter (
                 }
                 if(!itemData.editable && isEdit){
                     binding.edEdit.apply {
-                        fontVariationSettings = TEXT_WGHT_LIGHT
                         setTextColor(resources.getColor(color.darker_gray))
                     }
                 }
@@ -63,7 +72,6 @@ class ProfileContentAdapter (
             // Sets the
             else{
                 binding.edEdit.apply {
-                    fontVariationSettings = TEXT_WGHT_NORMAL
                     addTextChangedListener(object: TextWatcher{
                         override fun afterTextChanged (s: Editable?) {
                             itemData.content = s.toString()
@@ -99,8 +107,25 @@ class ProfileContentAdapter (
     }
 
     fun setEnableEditable(state: Boolean){ isEdit = state }
-
-    fun getEditTextData() : Map<String, String> = editItems.associate { it.id to it.content }
+    
+    fun getData() : UpdateUserRequest{
+        val items  = editItems.associate { it.id to it.content }
+        return UpdateUserRequest(
+            city = "",
+            isWa = false,
+            lang = "id",
+            name = items["user_name"]?.trim() ?: "",
+            phone = items["user_phone"]?.trim() ?: "",
+            email = items["user_email"]?.trim() ?: "",
+            gender = "",
+            village = "",
+            address = items["user_address"]?.trim() ?: "",
+            province = "",
+            district = "",
+            dateOfBirth = "",
+            placeOfBirth = items["user_birth_loc"]?.trim() ?: ""
+        )
+    }
 
 
 }

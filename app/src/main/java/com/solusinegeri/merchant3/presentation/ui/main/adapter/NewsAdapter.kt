@@ -1,6 +1,5 @@
-package com.solusinegeri.merchant3.presentation.ui.adapters
+package com.solusinegeri.merchant3.presentation.ui.main.adapter
 
-import android.text.format.DateUtils.formatDateTime
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

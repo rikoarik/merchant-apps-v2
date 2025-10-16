@@ -6,10 +6,12 @@ import android.net.Uri
 import android.text.Editable
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.solusinegeri.merchant3.presentation.ui.main.MainActivity
 import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.config.BuildConfig
 import com.solusinegeri.merchant3.core.base.BaseActivity
+import com.solusinegeri.merchant3.core.base.BaseViewModel
 import com.solusinegeri.merchant3.core.security.InputValidator
 import com.solusinegeri.merchant3.core.security.SecurityLogger
 import com.solusinegeri.merchant3.core.security.SecureStorage
@@ -23,6 +25,7 @@ import com.solusinegeri.merchant3.presentation.viewmodel.AuthViewModelFactory
 import com.solusinegeri.merchant3.presentation.viewmodel.UiState
 import com.solusinegeri.merchant3.core.security.SecurityThreat
 import com.solusinegeri.merchant3.presentation.ui.compose.SecurityDialog
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
 /**
@@ -229,7 +232,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
     override fun observeViewModel() {
         super.observeViewModel()
 
-        viewModel.uiState.observe(this) { state ->
+        // ⛳️ ganti uiState -> uiStateLive
+        viewModel.uiStateLive.observe(this) { state ->
             when (state) {
                 is UiState.Loading -> {
                     binding.btnLogin.setLoading(true)
@@ -240,17 +244,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
                     showSuccess(state.message.toString())
                     SecurityLogger.logLoginAttempt(this, "", companyId, true)
                     SecureStorage.resetFailedLoginAttempts(this)
-
                     navigateToMain()
                 }
                 is UiState.Error -> {
                     binding.btnLogin.setError(state.message)
                     val errorMessage = mapLoginError(state.message)
                     showError(errorMessage)
-
                     SecurityLogger.logLoginAttempt(this, "", companyId, false, errorMessage)
                     SecureStorage.recordFailedLoginAttempt(this)
-
                     updateLoginButtonState()
                 }
                 is UiState.Idle -> {
@@ -260,14 +261,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, AuthViewModel>() {
             }
         }
 
-
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
-            if (isLoggedIn) {
-                navigateToMain()
-            }
+            if (isLoggedIn) navigateToMain()
         }
     }
-    
+
+
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

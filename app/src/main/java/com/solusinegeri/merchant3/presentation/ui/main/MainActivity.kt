@@ -48,39 +48,40 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
 
     override fun setupUI() {
         super.setupUI()
-        
+
         vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
         setupNavigation()
         setupSwipeGesture()
         setupBackPressedHandler()
         performSecurityCheck()
     }
-    
+
     private fun setupNavigation() {
         val navHostFragment = supportFragmentManager
             .findFragmentById(binding.navHostFragment.id) as NavHostFragment
         val navController = navHostFragment.navController
-        
+
         setupComposeBottomNavigation(navController)
     }
-    
+
     private fun setupComposeBottomNavigation(navController: androidx.navigation.NavController) {
         binding.composeBottomNav.setContent {
             var currentRouteState by remember { mutableStateOf(currentRoute) }
-            
+
             LaunchedEffect(navController) {
                 navController.addOnDestinationChangedListener { _, destination, _ ->
                     val newRoute = when (destination.id) {
                         R.id.homeFragment -> "home"
                         R.id.profileFragment -> "profile"
                         R.id.newsFragment -> "news"
+                        R.id.analyticsFragment -> "analytics"
                         else -> "home"
                     }
                     currentRoute = newRoute
                     currentRouteState = newRoute
                 }
             }
-            
+
             BottomNavigationCompose(
                 currentRoute = currentRouteState,
                 onNavigate = { route ->
@@ -101,10 +102,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                             }
                         }
                         "analytics" -> {
-                            showSuccess("Analytics clicked")
-//                            if (currentRouteState != "analytics") {
-//                                navController.navigate(R.id.analyticsFragment)
-//                            }
+                            if (currentRouteState != "analytics") {
+                                navController.navigate(R.id.analyticsFragment)
+                            }
                         }
                     }
                 },
@@ -114,7 +114,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             )
         }
     }
-    
+
     @SuppressLint("ClickableViewAccessibility")
     private fun setupSwipeGesture() {
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -126,15 +126,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             ): Boolean {
                 val diffX = e2.x - (e1?.x ?: 0f)
                 val diffY = e2.y - (e1?.y ?: 0f)
-                
+
                 // Check if horizontal swipe is more significant than vertical
                 if (kotlin.math.abs(diffX) > kotlin.math.abs(diffY)) {
                     if (kotlin.math.abs(diffX) > 50 && kotlin.math.abs(velocityX) > 50) {
                         // Haptic feedback
                         vibrator.vibrate(50)
-                        
+
                         Log.d("SwipeNavigation", "Swipe detected: diffX=$diffX, velocityX=$velocityX, currentRoute=$currentRoute")
-                        
+
                         if (diffX > 0) {
                             // Swipe right - go to previous menu
                             Log.d("SwipeNavigation", "Swipe right - navigating to previous menu")
@@ -150,19 +150,19 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                 return false
             }
         })
-        
+
         // Set touch listener to the main container and nav host fragment
         binding.root.setOnTouchListener { _, event ->
             Log.d("SwipeNavigation", "Root touch event: ${event.action}")
             gestureDetector.onTouchEvent(event)
         }
-        
+
         binding.navHostFragment.setOnTouchListener { _, event ->
             Log.d("SwipeNavigation", "NavHost touch event: ${event.action}")
             gestureDetector.onTouchEvent(event)
         }
     }
-    
+
     private fun navigateToNextMenu() {
         when (currentRoute) {
             "home" -> {
@@ -175,11 +175,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                 navigateToNews()
             }
             "analytics" -> {
-//                navigateToNews()
+                navigateToAnalytics()
             }
         }
     }
-    
+
     private fun navigateToPreviousMenu() {
         when (currentRoute) {
             "home" -> {
@@ -192,11 +192,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
                 navigateToNews()
             }
             "analytics" -> {
-//                navigateToNews()
+                navigateToAnalytics()
             }
         }
     }
-    
+
     private fun navigateToHome() {
         if (currentRoute != "home") {
             Log.d("SwipeNavigation", "Navigating to Home")
@@ -207,7 +207,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             currentRoute = "home"
         }
     }
-    
+
     private fun navigateToProfile() {
         if (currentRoute != "profile") {
             Log.d("SwipeNavigation", "Navigating to Profile")
@@ -230,6 +230,17 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
         }
     }
 
+    private fun navigateToAnalytics() {
+        if (currentRoute != "analytics") {
+            Log.d("SwipeNavigation", "Navigating to Analytics")
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(binding.navHostFragment.id) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(R.id.analyticsFragment)
+            currentRoute = "analytics"
+        }
+    }
+
 
 
     private fun performSecurityCheck() {
@@ -243,7 +254,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
             }
         )
     }
-    
+
     private fun showSecurityDialog(threats: List<SecurityThreat>) {
         binding.composeBottomNav.setContent {
             SecurityDialog(
@@ -262,7 +273,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, AuthViewModel>() {
     private fun setupBackPressedHandler() {
         BackPressedHandler.addCallback(this) {
             val currentTime = System.currentTimeMillis()
-            
+
             if (currentTime - backPressedTime <= backPressInterval) {
                 finishAffinity()
             } else {

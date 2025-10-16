@@ -28,10 +28,6 @@ class HomeViewModel : BaseViewModel() {
     private val _balanceUiState = MutableLiveData<DataUiState<BalanceData>>()
     val balanceUiState: LiveData<DataUiState<BalanceData>> = _balanceUiState
 
-    // ===== News state =====
-    private val _newsUiState = MutableLiveData<DataUiState<NewsListResponse>>()
-    val newsUiState: LiveData<DataUiState<NewsListResponse>> = _newsUiState
-
     fun loadMenuData() {
         _menuUiState.value = DataUiState.Loading
         launchCoroutine(showLoading = false) {
@@ -63,32 +59,9 @@ class HomeViewModel : BaseViewModel() {
         }
     }
 
-    fun loadNewsData(
-        page: Int? = null,
-        size: Int? = null,
-        sortBy: String? = null,
-        dir: Int? = null
-    ) {
-        _newsUiState.value = DataUiState.Loading
-        launchCoroutine(showLoading = false) {
-            newsRepository.getNewsList(
-                page = page,
-                size = size,
-                sortBy = sortBy,
-                dir = dir
-            ).onSuccess { newsResponse ->
-                _newsUiState.value = DataUiState.Success(newsResponse, "Berita berhasil dimuat")
-            }.onFailure { error ->
-                _newsUiState.value = DataUiState.Error(error.message ?: "Gagal memuat berita")
-                setError(error.message ?: "Gagal memuat berita")
-            }
-        }
-    }
-
     fun refreshData(balanceCode: String) {
         loadMenuData()
         loadBalanceData(balanceCode)
-        loadNewsData(page = 1, size = 10, sortBy = "createdAt", dir = -1)
     }
 
     fun clearMenuError() {
@@ -97,9 +70,5 @@ class HomeViewModel : BaseViewModel() {
 
     fun clearBalanceError() {
         _balanceUiState.value = DataUiState.Idle
-    }
-
-    fun clearNewsError() {
-        _newsUiState.value = DataUiState.Idle
     }
 }

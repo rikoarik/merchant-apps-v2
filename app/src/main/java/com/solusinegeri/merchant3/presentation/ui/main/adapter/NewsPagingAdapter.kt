@@ -1,4 +1,4 @@
-package com.solusinegeri.merchant3.presentation.ui.adapters
+package com.solusinegeri.merchant3.presentation.ui.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

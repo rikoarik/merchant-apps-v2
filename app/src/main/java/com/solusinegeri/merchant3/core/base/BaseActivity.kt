@@ -11,12 +11,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.base.BaseViewModel.UiEvent
 import com.solusinegeri.merchant3.core.utils.AutoFontApplier
 import com.solusinegeri.merchant3.presentation.component.loading.LoadingPage
+import com.solusinegeri.merchant3.presentation.viewmodel.UiState
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Suppress("DEPRECATION")
@@ -31,7 +36,6 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = getViewBinding()
-
         setContentView(binding.root)
 
         AutoFontApplier.applyAutoFontToRootView(binding.root)
@@ -48,45 +52,81 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
     protected open fun setupClickListeners() {}
 
     open fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.isLoading.collect { isLoading -> showLoading(isLoading) }
+        collectFlow(viewModel.uiState) { state ->
+            when (state) {
+                UiState.Loading -> showLoading(true)
+                UiState.Idle -> showLoading(false)
+                is UiState.Error -> Unit
+                is UiState.Success -> Unit
+            }
+            onUiStateChanged(state)
         }
-        lifecycleScope.launch {
-            viewModel.errorMessage.collect { msg ->
-                msg?.let { showError(it); viewModel.clearError() }
+        collectFlow(viewModel.errorMessage) { msg ->
+            if (msg != null) {
+                showError(msg)
+                viewModel.clearError()
             }
         }
-        lifecycleScope.launch {
-            viewModel.successMessage.collect { msg ->
-                msg?.let { showSuccess(it); viewModel.clearSuccess() }
+        collectFlow(viewModel.successMessage) { msg ->
+            if (msg != null) {
+                showSuccess(msg)
+                viewModel.clearSuccess()
             }
         }
+        collectFlow(viewModel.events) { handleEvent(it) }
     }
 
     fun showLoading(show: Boolean) {
         if (show) showLoadingOverlay() else hideLoadingOverlay()
     }
 
+    /**
+     * Selalu tambahkan overlay ke android.R.id.content (FrameLayout root)
+     * supaya aman meskipun layout utama adalah ScrollView.
+     */
     private fun showLoadingOverlay() {
-        if (loadingOverlay != null) return
-        val overlay = createLoadingOverlay()
-        (binding.root as ViewGroup).addView(overlay)
+        if (isFinishing || isDestroyed) return
+        val container = getOverlayContainer() ?: return
+
+        // Hindari double-add: cek by tag
+        val existing = container.findViewWithTag<View>(LOADING_TAG)
+        if (existing != null) {
+            loadingOverlay = existing
+            return
+        }
+
+        val overlay = createLoadingOverlay().apply { tag = LOADING_TAG }
+        container.addView(
+            overlay,
+            FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+        )
         overlay.alpha = 0f
-        overlay.animate().alpha(1f).setDuration(300).start()
+        overlay.animate().alpha(1f).setDuration(200).start()
         loadingOverlay = overlay
     }
 
     private fun hideLoadingOverlay() {
-        loadingOverlay?.let { overlay ->
-            overlay.animate()
-                .alpha(0f)
-                .setDuration(300)
-                .withEndAction {
-                    (binding.root as ViewGroup).removeView(overlay)
-                    loadingOverlay = null
-                }
-                .start()
-        }
+        val overlay = loadingOverlay ?: return
+        val parent = overlay.parent as? ViewGroup ?: return
+        overlay.animate()
+            .alpha(0f)
+            .setDuration(200)
+            .withEndAction {
+                parent.removeView(overlay)
+                loadingOverlay = null
+            }
+            .start()
+    }
+
+    /**
+     * Container aman untuk overlay (selalu FrameLayout):
+     * ini adalah root content view Activity.
+     */
+    private fun getOverlayContainer(): ViewGroup? {
+        return window?.decorView?.findViewById(android.R.id.content) as? ViewGroup
     }
 
     private fun createLoadingOverlay(): View {
@@ -98,13 +138,16 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
-            setBackgroundColor(android.graphics.Color.parseColor("#80000000"))
+            // semi-transparent black
+            setBackgroundColor(0x80000000.toInt())
 
             addView(LoadingPage(this@BaseActivity).apply {
                 layoutParams = FrameLayout.LayoutParams(sizeInPx, sizeInPx).apply {
                     gravity = android.view.Gravity.CENTER
                 }
             })
+            isClickable = true
+            isFocusable = true
         }
     }
 
@@ -176,7 +219,6 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
         }
     }
 
-
     protected fun makeNavigationBarTransparent() {
         window.navigationBarColor = android.graphics.Color.TRANSPARENT
         WindowCompat.getInsetsController(window, window.decorView).apply {
@@ -187,5 +229,30 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : FragmentActi
     protected fun makeSystemBarsTransparent() {
         makeStatusBarTransparent()
         makeNavigationBarTransparent()
+    }
+
+    protected open fun onUiStateChanged(state: UiState) = Unit
+
+    protected open fun handleEvent(event: UiEvent) {
+        when (event) {
+            is UiEvent.ShowSnackbar -> showSuccess(event.message)
+            else -> Unit
+        }
+    }
+
+    protected fun <T> collectFlow(
+        flow: Flow<T>,
+        minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
+        collector: suspend (T) -> Unit
+    ) {
+        lifecycleScope.launch {
+            repeatOnLifecycle(minActiveState) {
+                flow.collect(collector)
+            }
+        }
+    }
+
+    companion object {
+        private const val LOADING_TAG = "BaseActivityLoadingOverlay"
     }
 }

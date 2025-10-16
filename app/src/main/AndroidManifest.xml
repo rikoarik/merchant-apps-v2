@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
+
 
     <application
         android:name=".MerchantApplication"
@@ -30,12 +33,11 @@
             android:name=".presentation.ui.menu.profiles.ProfileEditActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.menu.analytics.AnalyticsActivity"
+            android:name=".presentation.ui.menu.profiles.PasswordEditActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.menu.analytics.MainActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SolusiNegeriMerchant" />
+            android:name=".presentation.ui.menu.analytics.AnalyticsActivity"
+            android:exported="false" />
         <activity
             android:name=".presentation.ui.menu.news.NewsDetailActivity"
             android:exported="false"

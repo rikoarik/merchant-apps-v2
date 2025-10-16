@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     android:background="@color/white">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -44,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="100dp"
-                    android:layout_marginTop="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_56sdp"
                         android:orientation="horizontal"
+
                         android:background="@drawable/bg_glass_blur"
                         android:gravity="center_vertical">
 
