@@ -1,7 +1,6 @@
 package com.solusinegeri.merchant3.presentation.ui.menu.profiles
 
 import android.Manifest
-import android.R
 import android.app.ComponentCaller
 import android.app.DatePickerDialog
 import android.content.ContentValues
@@ -21,6 +20,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.solusinegeri.merchant3.R
 import com.solusinegeri.merchant3.R.string
 import com.solusinegeri.merchant3.R.color
 import com.solusinegeri.merchant3.core.base.BaseActivity
@@ -78,9 +78,9 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         setupEdgeToEdge()
         setupToolBar()
         setupRecyclerView()
+        updateUIWithDynamicColors()
         setupOnClickListeners()
         setupTypefaces()
-        updateUIWithDynamicColors()
         loadUser()
     }
 
@@ -119,6 +119,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                                 selectedGender     = it.toString()
                                 rbMale.isChecked   = it == "male"
                                 rbFemale.isChecked = it == "female"
+                                binding.ivGenderIcon.setImageResource(if (it == "male") R.drawable.ic_gender_man else R.drawable.ic_gender_woman)
                             }
                             tvEmail.text = profile.email
                             tvName.text  = profile.name
@@ -174,12 +175,21 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
         // Update profile placeholder icon
         binding.imgProfile.setColorFilter(primaryColor)
 
+        //Update profile image edit buttons
         binding.btnChangePhoto.backgroundTintList = ColorStateList.valueOf(primaryColor)
         binding.btnRemovePhoto.backgroundTintList = ColorStateList.valueOf(primaryColor)
         binding.btnChangePhoto.strokeColor = ColorStateList.valueOf(primaryColor)
         binding.btnRemovePhoto.strokeColor = ColorStateList.valueOf(primaryColor)
 
+        //update banner color
         binding.ivBanner.setBackgroundColor(primaryColor)
+
+        //update profile edit icons
+        binding.ivGenderIcon.setColorFilter(primaryColor)
+        binding.ivCalendarIcon.setColorFilter(primaryColor)
+
+        binding.rbMale.buttonTintList = ColorStateList.valueOf(primaryColor)
+        binding.rbFemale.buttonTintList = ColorStateList.valueOf(primaryColor)
 
         // Update recyclerview text fields
         itemAdapter.setBoxSpotColor(primaryColor)
@@ -211,7 +221,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
             isFocusable = false
             inputType   = InputType.TYPE_NULL
             fontVariationSettings = "'wght' 300"
-            setTextColor(resources.getColor(R.color.darker_gray))
+            setTextColor(resources.getColor(R.color.color_dark_gray))
         }
     }
 
@@ -250,7 +260,8 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                 id       = USER_MAP_NAME,
                 title    = getString(string.profile_edit_name_item),
                 content  = viewModel.userData.value?.name ?: getString(string.placeholder_name),
-                editable = true
+                editable = true,
+                iconRes  = R.drawable.ic_profile_placeholder
             ),
             ProfileEditItem(
                 id       = USER_MAP_ID,
@@ -268,13 +279,15 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
                 id       = USER_MAP_PHONE,
                 title    = getString(string.profile_edit_phone_item),
                 content  = viewModel.userData.value?.phone ?: getString(string.placeholder_phone),
-                editable = true
+                editable = true,
+                iconRes  = R.drawable.ic_phone
             ),
             ProfileEditItem(
                 id       = USER_MAP_ADDR,
                 title    = getString(string.profile_edit_address_item),
                 content  = viewModel.userData.value?.address ?: getString(string.placeholder_address),
-                editable = true
+                editable = true,
+                iconRes  = R.drawable.ic_location
             ),
             ProfileEditItem(
                 id       = USER_MAP_B_LOC,
@@ -300,6 +313,7 @@ class ProfileEditActivity : BaseActivity<ActivityProfileEditBinding, ProfileView
 
             rgGender.setOnCheckedChangeListener { _, checkedId ->
                 selectedGender = if (rbMale.id == checkedId) "male" else "female"
+                binding.ivGenderIcon.setImageResource(if (rbMale.id == checkedId) R.drawable.ic_gender_man else R.drawable.ic_gender_woman)
             }
 
             imgProfile.setOnClickListener { showImageOption() }

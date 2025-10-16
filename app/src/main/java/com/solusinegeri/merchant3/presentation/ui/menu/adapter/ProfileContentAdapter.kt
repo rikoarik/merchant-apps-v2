@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.solusinegeri.merchant3.R
+import com.solusinegeri.merchant3.core.utils.DynamicColors
 import com.solusinegeri.merchant3.data.model.ProfileEditItem
 import com.solusinegeri.merchant3.data.requests.UpdateUserRequest
 import com.solusinegeri.merchant3.databinding.ItemProfileEditBinding
@@ -46,9 +48,15 @@ class ProfileContentAdapter (
         private val binding: ItemProfileEditBinding
     ) : RecyclerView.ViewHolder(binding.root){
         fun bind( itemData : ProfileEditItem ){
+            val primaryColor = DynamicColors.getPrimaryColor(binding.root.context)
+
             binding.edEdit .setText(itemData.content)
-            binding.tvTitle.text = itemData.title
+            binding.edBox  .hint = itemData.title
             binding.edBox  .boxStrokeColor = boxSpotColor
+            binding.ivIcon.setColorFilter(primaryColor)
+            itemData.iconRes?.let { icon->
+                binding.ivIcon.setImageResource(icon)
+            }
 
             if(!itemData.editable || !isEdit){
                 binding.edEdit.apply {

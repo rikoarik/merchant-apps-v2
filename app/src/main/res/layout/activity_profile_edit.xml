@@ -168,14 +168,15 @@
 
                     android:layout_marginHorizontal="@dimen/medium_margin_twenty_four"
                     android:layout_marginVertical  ="@dimen/small_margin_16"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toBottomOf="@id/rv_profile_edit">
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/rv_profile_edit"
+                    android:gravity="center_vertical">
 
-                    <TextView
-                        android:id="@+id/ed_tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_edit_b_loc_item"
+                    <ImageView
+                        android:id="@+id/iv_calendar_icon"
+                        android:layout_width="@dimen/_32sdp"
+                        android:layout_height="@dimen/_32sdp"
+                        android:src="@drawable/calendernew"
                         />
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -184,12 +185,14 @@
                         android:layout_width ="match_parent"
                         android:visibility   ="visible"
 
-                        app:boxCornerRadiusBottomStart="@dimen/_16sdp"
-                        app:boxCornerRadiusBottomEnd  ="@dimen/_16sdp"
-                        app:boxCornerRadiusTopStart   ="@dimen/_16sdp"
-                        app:boxCornerRadiusTopEnd     ="@dimen/_16sdp"
+                        android:layout_marginStart="@dimen/medium_margin_twenty_four"
 
-                        app:boxStrokeColor="@color/primary_color"
+                        app:boxCornerRadiusBottomStart="@dimen/_12sdp"
+                        app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
+                        app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
+                        app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
+
+                        app:boxStrokeColor    ="@color/primary_color"
 
                         app:boxBackgroundColor="@color/white_dynamic"
                         app:hintTextColor     ="@color/black"
@@ -202,7 +205,8 @@
                             android:layout_width ="match_parent"
                             android:singleLine   ="true"
                             android:focusable    ="false"
-                            android:textColor    ="@color/color_dark_gray"/>
+                            android:textColor    ="@color/color_dark_gray"
+                            android:hint="@string/profile_edit_b_day_item"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -210,33 +214,46 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_marginHorizontal="@dimen/medium_margin_twenty_four"
                     android:layout_marginVertical="@dimen/small_margin_16"
                     app:layout_constraintTop_toBottomOf="@id/ll_calendar_frame">
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/iv_gender_icon"
+                        android:layout_width="@dimen/_32sdp"
+                        android:layout_height="@dimen/_32sdp"
+                        android:src="@drawable/ic_gender_man"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/profile_edit_gender_item"/>
-                    <RadioGroup
-                        android:id="@+id/rg_gender"
-                        android:layout_height="wrap_content"
-                        android:layout_width ="match_parent">
-                        <RadioButton
-                            android:id="@+id/rb_female"
+                        android:orientation="vertical"
+                        android:layout_marginStart="@dimen/medium_margin_twenty_four">
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="@dimen/_4sdp"
+                            android:text="@string/profile_edit_gender_item"/>
+                        <RadioGroup
+                            android:id="@+id/rg_gender"
+                            android:layout_height="wrap_content"
+                            android:layout_width ="match_parent">
+                            <RadioButton
+                                android:id="@+id/rb_female"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="@dimen/_4sdp"
 
-                            android:text="@string/profile_edit_gender_female"/>
-                        <RadioButton
-                            android:id="@+id/rb_male"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="@dimen/_4sdp"
-                            android:text="@string/profile_edit_gender_male"/>
-                    </RadioGroup>
+                                android:text="@string/profile_edit_gender_female"/>
+                            <RadioButton
+                                android:id="@+id/rb_male"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="@dimen/_4sdp"
+                                android:text="@string/profile_edit_gender_male"/>
+                        </RadioGroup>
+                    </LinearLayout>
                 </LinearLayout>
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,26 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_marginHorizontal="@dimen/medium_margin_twenty_four"
-    android:layout_marginVertical="@dimen/small_margin_16">
+    android:layout_marginVertical="@dimen/_12sdp"
+    android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/placeholder_menu_title"
-        />
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="@dimen/_32sdp"
+        android:layout_height="@dimen/_32sdp"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ed_box"
         android:layout_height="wrap_content"
         android:layout_width ="match_parent"
 
-        app:boxCornerRadiusBottomStart="@dimen/_16sdp"
-        app:boxCornerRadiusBottomEnd  ="@dimen/_16sdp"
-        app:boxCornerRadiusTopStart   ="@dimen/_16sdp"
-        app:boxCornerRadiusTopEnd     ="@dimen/_16sdp"
+        android:layout_marginStart="@dimen/medium_margin_twenty_four"
+
+        app:boxCornerRadiusBottomStart="@dimen/_12sdp"
+        app:boxCornerRadiusBottomEnd  ="@dimen/_12sdp"
+        app:boxCornerRadiusTopStart   ="@dimen/_12sdp"
+        app:boxCornerRadiusTopEnd     ="@dimen/_12sdp"
 
         app:boxBackgroundColor        ="@color/white_dynamic"
         app:hintTextColor             ="@color/black">
